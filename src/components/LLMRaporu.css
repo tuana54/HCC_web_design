@@ -148,3 +148,14 @@ body {
 .print-button:hover {
     background-color: #0056b3;
 }
+.rapor-container {
+  width: 210mm;             /* A4 genişliği */
+  min-height: 297mm;        /* A4 yüksekliği */
+  margin: 20px auto;        /* Ortala */
+  padding: 20mm;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  font-family: 'Segoe UI', sans-serif;
+  box-sizing: border-box;
+  color: #333;
+}

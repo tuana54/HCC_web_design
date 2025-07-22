@@ -4,11 +4,16 @@ import "./TahminSonuc.css"; // CSS dosyasını içe aktarın
 import { useLocation, useNavigate } from "react-router-dom";
 import {FaUserMd, FaRobot, FaStethoscope, FaFlask, FaLaptopMedical, FaImage } from "react-icons/fa";
 import { FaArrowLeft , FaArrowRight} from "react-icons/fa";
+import { useEffect } from "react"; // en başta import edilmeli
+import LLMModelComparison from "./LLMModelComparison";
+
 const TahminSonuc = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [doktorYorumu, setDoktorYorumu] = useState(""); // React.useState yerine useState kullandık
-  
+  const [doctorSummary, setDoctorSummary] = useState("");
+
+
   const { hastaAdiSoyadi, apiResult, patientDetails } = location.state || {};
 const [selectedDoctor, setSelectedDoctor] = useState("");
   if (!apiResult || !hastaAdiSoyadi) {
@@ -82,22 +87,8 @@ const [selectedDoctor, setSelectedDoctor] = useState("");
 <div className="llm-header">
 <h3><FaRobot /> Yapay Zekâ Değerlendirmesi</h3>
 </div>
-<div className="doktor-secim-alani">
-<label htmlFor="doktorSecimi"></label>
-<select
-id="doktorSecimi"
-className="doktor-select"
-value={selectedDoctor}
-onChange={(e) => setSelectedDoctor(e.target.value)}
->
-<option value="">-- Doktor Seçin --</option>
-<option value="Dr. Ayşe">Dr. Ayşe</option>
-<option value="Dr. Can">Dr. Can</option>
-<option value="Dr. Elif">Dr. Elif</option>
-<option value="Dr. Murat">Dr. Murat</option>
-<option value="Dr. Zeynep">Dr. Zeynep</option>
-</select>
-</div>
+<LLMModelComparison />
+
 </div>
 
 
@@ -152,25 +143,26 @@ onChange={(e) => setSelectedDoctor(e.target.value)}
   onChange={(e) => setDoktorYorumu(e.target.value)}
 ></textarea>
       </div>
+{/*
+  <div className="button-container">
+    <button
+      className="calculate-btn"
+      onClick={() =>
+        navigate("/pdfrapor", {
+          state: {
+            hastaAdiSoyadi: hastaAdiSoyadi,
+            apiResult: apiResult,
+            patientDetails: patientDetails,
+            doktorYorumu: doktorYorumu,
+          },
+        })
+      }
+    >
+      PDF Raporu Oluştur
+    </button>
+  </div>
+*/}
 
-      {/* Butonlar Alanı */}
-      <div className="button-container">
-        <button
-          className="calculate-btn" // PDF Raporu Oluştur butonu, ana buton stilini kullanıyor
-          onClick={() =>
-            navigate("/pdfrapor", {
-              state: {
-                hastaAdiSoyadi: hastaAdiSoyadi,
-                apiResult: apiResult,
-                patientDetails: patientDetails,
-                doktorYorumu: doktorYorumu, // Doktor yorumu burdan aktarılıyor
-              },
-            })
-          }
-        >
-          PDF Raporu Oluştur
-        </button>
-      </div>
 
     </div>
   );

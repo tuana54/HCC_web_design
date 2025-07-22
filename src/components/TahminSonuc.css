@@ -297,27 +297,57 @@ risk-kutusu.risk-orta {
   margin-left: 0;             /* Sola yaslı */
   margin-right: auto;         /* Sağdan boşluk bırak */
 }
+.llm-yatay-alan {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+.doktor-select {
+  padding: 12px 16px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  width: 200px;
+  height: 52px;
+   cursor: pointer; 
+}
 
-.doktor-secim-alani {
-margin-top: 8px;
-text-align: left;
-padding-left: 16px; /* hafif boşluk olsun */
+.doktor-ozet-kutu {
+  cursor: pointer;
+  background-color: #f0f4ff;
+  padding: 12px 16px;
+  border-left: 4px solid #4a90e2;
+  border-radius: 8px;
+  min-width: 400px;
+  max-width: 500px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+  font-size: 1rem;
+  color: #333;
+  height: 52px;
+  display: flex;
+  align-items: center;
 }
-.doktor-select {
-padding: 8px;
-border-radius: 8px;
-font-size: 16px;
-width: 250px;
+
+
+.doktor-ozet-kutu:hover {
+  background-color: #e4ecff;
 }
-.doktor-secim-alani {
-margin-top: 8px;
-text-align: left;
-padding-left: 16px; /* hafif boşluk olsun */
+.llm-yapay-kapsayici {
+  display: flex;
+  justify-content: flex-start;  /* sola yaslı */
+  margin-left: 80px;            /* sağa doğru kaydırır */
+  margin-top: 20px;
 }
-.doktor-select {
-padding: 8px;
-border-radius: 8px;
-font-size: 16px;
-width: 250px;
+.doktor-select:hover {
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2); /* Gölgelendirme efekti */
+  transition: box-shadow 0.2s ease-in-out;
 }
+
+
+
+
+
 
