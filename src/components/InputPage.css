@@ -1,0 +1,347 @@
+/* InputPage.css */
+
+.input-page {
+  max-width: 1280px;
+  margin: 30px auto;
+  padding: 40px;
+  font-family: "Segoe UI", sans-serif;
+  background-color: #f0f4f8;  /* sayfanın arka planı*/
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.input-page h2 {
+  font-size: 28px;
+  font-weight: bold;
+  color: #1e3a8a; /* Aynı mavi ton */
+  margin-bottom: 40px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+
+.flex-row {
+  display: flex;
+  gap: 60px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.left-section, .right-section {
+  flex: 1;
+  min-width: 300px;
+}
+
+.left-section h3,
+.right-section h3,
+.bt-section h3 {
+  font-size: 20px;
+  font-weight: bold;
+  font-family: 'Segoe UI', sans-serif;
+  margin-bottom: 20px;
+  color:  #1e3a8a; /* Mavi ton */
+}
+
+.form-group {
+  text-align: left;
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label,
+.lab-item label {
+  font-weight: 500;
+  font-size: 14px;
+  color: #1e3a8a; /* Mavi ton */
+  margin-bottom: 4px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+
+/* Ortak label stili */
+label {
+  font-weight: 500;
+  font-size: 14px;
+  color: #1e3a8a;  /* TahminSonuç ve InputPage ile uyumlu mavi */
+  font-family: 'Segoe UI', sans-serif;
+  margin-bottom: 4px;
+  display: block;
+  text-align: left;
+}
+
+.form-group input:focus {
+  border-color: #3b82f6; /* Fokus rengini mavi yap */
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); /* Fokus için hafif mavi parıltı */
+}
+
+
+.lab-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px 30px;
+}
+
+.lab-item {
+  display: flex;
+  flex-direction: column;
+}
+
+
+
+.lab-item input {
+  padding: 8px 10px;
+  border: 1.5px solid #94a3b8;
+  border-radius: 10px;
+  background-color: #ffffff;
+  font-size: 13px;
+  color: #1e293b;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  transition: all 0.2s ease;
+}
+
+.lab-item input:focus {
+  border-color: #3b82f6;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+.bt-section {
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  background-color: #d6e4f4;
+  padding: 30px;
+  border-radius: 16px;
+  margin-bottom: 40px;
+}
+
+.upload-group {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.upload-block {
+  flex: 1 1 48%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.upload-area {
+  border: 2px dashed #edf0f4;/* MR / ULTRASON ALANININ KENAR ÇİZGİSİ */
+  background-color: #ffffff;/* MR / ULTRASON ALANININ ARKA PLANI */
+  padding: 40px;
+  text-align: center;
+  border-radius: 12px;
+  cursor: pointer;
+  margin-top: 8px;
+  display: block;
+  transition: 0.3s;
+}
+
+.upload-area:hover {
+  background-color: #e0f2fe;/* MR / ULTRASON ALANINA HOVER (ÜZERİNE GELİNİNCE) RENGİ */
+}
+
+.upload-area div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.upload-area strong {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1e3a8a;/* "MR Görüntüsü Yükle" GİBİ KALIN YAZILARIN RENGİ */
+}
+
+.upload-area small {
+  font-size: 11px;
+  color: #8e97a7; /* MR / ULTRASON ALANINDAKİ AÇIKLAMA YAZISI (gri) */
+}
+
+input[type="file"] {
+  display: none;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 60px;
+}
+
+.calculate-btn {
+  padding: 12px 28px;
+  background-color: #0046dd;/* HESAPLA BUTONUNUN ARKA PLANI */
+  color: #ffffff;/* HESAPLA BUTONU YAZI RENGİ */
+  border: none;
+  font-size: 15px;
+  border-radius: 9999px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.calculate-btn:hover {
+  background-color: #1e40af;
+  transform: scale(1.05);
+}
+
+.bt-lab-header {
+  margin-top: 0;
+}
+
+.form-control {
+  width: 100%;
+  height: 38px;
+  padding: 8px 12px;
+  font-size: 14px;
+  font-family: inherit;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: white;
+  box-sizing: border-box;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+select.form-control {
+  background-image: url("data:image/svg+xml;utf8,<svg fill='gray' height='12' viewBox='0 0 24 24' width='12' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 12px;
+  padding-right: 30px; /* Dropdown oku için */
+}
+
+.hasta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+.hasta-grid-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.image-section-wrapper {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.bt-section {
+  flex: 1;
+  max-width: 48%;
+}
+
+.upload-area {
+  border: 2px dashed #ccc;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fafafa;
+  transition: border-color 0.3s;
+}
+
+.upload-area img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 12px;
+}
+/* Doktor Notu Bölümü */
+.doctor-note-card {
+  background-color: white;
+  border-left: 6px solid #3b82f6;
+  padding: 20px 24px;
+  border-radius: 12px;
+  margin-top: 40px;
+  width: 100%; /* Tüm satırı kapla */
+  max-width: none; /* Üst sınır koyma */
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+}
+
+.doctor-note-card h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1e3a8a;
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.doctor-note-card h3 svg {
+  margin-right: 8px;
+}
+
+.doctor-note-card textarea {
+  width: 100%;
+  height: 120px; /* Sabit yükseklik */
+  font-size: 15px;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1.5px solid #ccdfff;
+  background-color: #ffffff;
+  resize: none; /* Uzamasın */
+}
+/* Tüm sayfadaki <h3> başlıklar için genel stil */
+h3 {
+  font-size: 20px;
+  font-weight: bold;
+  font-family: 'Segoe UI', sans-serif;
+  color: #1e3a8a; /* Lacivert */
+  margin-bottom: 16px;
+}
+.nav-buttons-fixed {
+  position: fixed;           /* Sayfanın kendisine göre */
+  top: 20px;                 /* Yukarıdan 20px */
+  left: 20px;                /* Soldan 20px */
+  display: flex;
+  gap: 10px;
+  z-index: 1000;
+}
+
+.nav-buttons-inside {
+  position: absolute;
+  top: 40px;
+  left: 60px;
+  display: flex;
+  gap: 10px;
+  z-index: 10;
+}
+
+.nav-btn {
+  background-color: rgba(28, 61, 120, 0.05);
+  border: none;
+  border-radius: 50%;
+  padding: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  backdrop-filter: blur(3px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+.nav-btn:hover {
+  background-color: rgba(28, 61, 120, 0.2);
+  transform: scale(1.05);
+}
+
+.nav-icon {
+  color: #1c3d78;
+  font-size: 18px;
+}

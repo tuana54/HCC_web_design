@@ -1,0 +1,97 @@
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  height: 100vh;
+  font-family: 'Segoe UI', sans-serif;
+  padding-top: 40px; /* Sayfanın en üstünden boşluk */
+}
+
+.login-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 10px;
+  margin-top: 30px;
+}
+
+.login-header img {
+  width: 280px;
+  margin-bottom: 0px;
+  margin-top: 30px
+}
+
+.welcome-text {
+  font-size: 18px;
+  color: #333;
+  margin: 5px 0 10px;
+  text-align: center;
+}
+
+.login-box {
+  background-color: #ffffff;
+  padding: 30px 25px;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.login-box input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.login-box input:focus {
+  outline: none;
+  border-color: #004cff;
+  box-shadow: 0 0 5px rgba(0, 76, 255, 0.3);
+}
+
+.login-box button {
+  width: 100%;
+  padding: 12px;
+  background-color: #004cff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.login-box button:hover {
+  background-color: #0036cc;
+}
+
+.login-footer {
+  text-align: center;
+  margin-top: 16px;
+}
+
+.forgot-password,
+.register-link {
+  font-size: 14px;
+  color: #555;
+  margin: 4px 0;
+}
+
+.register-link span {
+  color: #004cff;
+  font-weight: 600;
+  cursor: pointer;
+}
+.auth-container {
+  background-color: #f1f5f9; /* TahminSonuc ile aynı */
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
