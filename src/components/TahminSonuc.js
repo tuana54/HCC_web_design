@@ -1,8 +1,15 @@
 // src/components/TahminSonuc.js (YENİ VERSİYON - API Çıktılarına Tam Uygun, Yapı Korundu)
+<<<<<<< HEAD
 import React, { useState, useEffect } from "react"; 
 import "./TahminSonuc.css"; // CSS dosyasını içe aktarın
 import { useLocation, useNavigate } from "react-router-dom";
 import {FaUserMd, FaRobot, FaStethoscope, FaFlask, FaLaptopMedical, FaImage, FaArrowLeft, FaArrowRight } from "react-icons/fa";
+=======
+import React, { useState, useEffect } from "react";
+import "./TahminSonuc.css";
+import { useLocation, useNavigate } from "react-router-dom";
+import { FaUserMd, FaRobot, FaStethoscope, FaFlask, FaLaptopMedical, FaImage, FaPaperPlane, FaArrowLeft, FaArrowRight } from "react-icons/fa";
+>>>>>>> 800093c8e226d7e237b9ad83ecae085e016bc779
 import LLMModelComparison from "./LLMModelComparison";
 
 const TahminSonuc = () => {
@@ -10,9 +17,15 @@ const TahminSonuc = () => {
   const navigate = useNavigate();
   const [doktorYorumu, setDoktorYorumu] = useState(""); 
   const [doctorSummary, setDoctorSummary] = useState("");
+<<<<<<< HEAD
 
   const { hastaAdiSoyadi, apiResult, patientDetails } = location.state || {};
   const [selectedDoctor, setSelectedDoctor] = useState("");
+=======
+  const [selectedDoctor, setSelectedDoctor] = useState("");
+  const { hastaAdiSoyadi, apiResult, patientDetails } = location.state || {};
+
+>>>>>>> 800093c8e226d7e237b9ad83ecae085e016bc779
 
   if (!apiResult || !hastaAdiSoyadi) {
     return (
@@ -86,6 +99,7 @@ const TahminSonuc = () => {
         <LLMModelComparison />
       </div>
 
+<<<<<<< HEAD
       {/* Görüntü Analizi Alanları (USG ve MRI) */}
       <div className="image-analysis-section">
         {patientDetails?.ultrasonFileUploaded && ( // USG dosyası yüklendiyse göster
@@ -156,6 +170,62 @@ const TahminSonuc = () => {
         </button>
       </div>
       */}
+=======
+  <div className="kart usg-goruntu-kart">
+  <h3>
+    <i className="fas fa-image ikon"></i> USG Görüntü Analizi
+  </h3>
+
+  <div className="usg-icerik-grid">
+    {/* Sol: Görüntü kutusu */}
+    <div className="usg-goruntu-alani">
+      {patientDetails?.ultrasonImageUrl && patientDetails.ultrasonImageUrl.startsWith("blob:") ? (
+        <img
+          src={patientDetails.ultrasonImageUrl}
+          alt="USG Görüntüsü"
+          className="usg-image-preview"
+        />
+      ) : (
+        <div className="usg-image-placeholder">
+          Görüntü burada görüntülenecek (placeholder)
+        </div>
+      )}
+    </div>
+
+    {/* Sağ: VLM Yorum */}
+    <div className="vlm-yorum-alani">
+      {apiResult?.vlm_yanit ? (
+        <p>{apiResult.vlm_yanit}</p>
+      ) : (
+        <p className="usg-placeholder">USG analizi henüz sağlanmadı.</p>
+      )}
+    </div>
+  </div>
+</div>
+
+
+
+
+
+      {/* Doktor Geri Bildirim Alanı */}
+      <div className="kart doktor-yorum-kapsayici">
+        <h3><FaUserMd /> Doktor Geri Bildirimi</h3>
+        <div className="doktor-yorum-wrapper">
+          <textarea 
+            className="doktor-textarea"
+            placeholder="Doktor yorumunu buraya yazabilir..."
+            value={doktorYorumu}
+            onChange={(e) => setDoktorYorumu(e.target.value)}
+          />
+          <button
+            className="ikon-gonder-btn"
+            onClick={() => alert("Yorumladığınız için teşekkür ederiz.")}
+          >
+            <FaPaperPlane />
+          </button>
+        </div>
+      </div>
+>>>>>>> 800093c8e226d7e237b9ad83ecae085e016bc779
     </div>
   );
 };

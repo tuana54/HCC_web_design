@@ -299,9 +299,12 @@ risk-kutusu.risk-orta {
 }
 .llm-yatay-alan {
   display: flex;
+<<<<<<< HEAD
   flex-grow: 1;
   width: 97%;
   box-sizing: border-box;
+=======
+>>>>>>> 800093c8e226d7e237b9ad83ecae085e016bc779
   align-items: center;
   gap: 20px;
   flex-wrap: wrap;
@@ -324,7 +327,11 @@ risk-kutusu.risk-orta {
   border-left: 4px solid #4a90e2;
   border-radius: 8px;
   min-width: 400px;
+<<<<<<< HEAD
   
+=======
+  max-width: 500px;
+>>>>>>> 800093c8e226d7e237b9ad83ecae085e016bc779
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   transition: all 0.3s ease;
   font-size: 1rem;
@@ -332,8 +339,11 @@ risk-kutusu.risk-orta {
   height: 52px;
   display: flex;
   align-items: center;
+<<<<<<< HEAD
   flex-grow: 1;
   box-sizing: border-box; 
+=======
+>>>>>>> 800093c8e226d7e237b9ad83ecae085e016bc779
 }
 
 
@@ -350,9 +360,270 @@ risk-kutusu.risk-orta {
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.2); /* Gölgelendirme efekti */
   transition: box-shadow 0.2s ease-in-out;
 }
+<<<<<<< HEAD
 
 
 
 
 
+=======
+.doktor-yorum-kapsayici {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.doktor-yorum-satiri {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+
+
+.doktor-yorum-wrapper {
+  position: relative;
+  padding-bottom: 60px; /* ✴️ Butonun sarkmasını engeller */
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.ikon-gonder-btn {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 50%;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.ikon-gonder-btn:hover {
+  background-color: #1e40af;
+  transform: scale(1.1);
+}
+
+.doktor-textarea {
+  width: 100%;
+  min-height: 130px;
+  font-size: 16px;
+  padding: 12px;
+  padding-right: 60px; /* Butonla çakışmasın diye sağ boşluk */
+  resize: vertical;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9fafb;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+.usg-goruntu-kart {
+  display: flex;
+  flex-direction: column;
+  border-left: 6px solid #3b82f6;
+  padding: 20px;
+  border-radius: 12px;
+  background-color: white;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  margin-bottom: 24px;
+}
+
+.usg-icerik-iki-kolon {
+  display: flex;
+  gap: 24px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.usg-goruntu {
+  flex: 1;
+  min-width: 250px;
+  max-width: 350px;
+}
+
+.usg-image-preview {
+  width: 100%;
+  max-height: 240px;
+  object-fit: contain;
+  border: 1px dashed #999;
+  border-radius: 8px;
+  padding: 4px;
+}
+
+.usg-image-placeholder {
+  width: 100%;
+  height: 200px;
+  border: 1px dashed #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+  font-style: italic;
+  border-radius: 8px;
+  background-color: #f9fafb;
+}
+
+.usg-vlm-aciklama {
+  flex: 2;
+  background-color: #f0f4f8;
+  padding: 16px;
+  border-left: 4px solid #6366f1;
+  border-radius: 10px;
+  font-size: 15px;
+  color: #1e293b;
+  line-height: 1.6;
+  min-width: 300px;
+}
+
+.usg-placeholder {
+  font-style: italic;
+  color: #6b7280;
+}
+.guncel-usg-kart {
+  padding: 30px;
+  border-left: 6px solid #6366f1;
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.usg-icerik-iki-kolon {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 30px;
+  align-items: flex-start;
+  margin-top: 20px;
+}
+
+.usg-goruntu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f9fafb;
+  border: 1px dashed #94a3b8;
+  border-radius: 12px;
+  padding: 16px;
+  min-height: 280px;
+}
+
+.usg-image-preview {
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  object-fit: contain;
+}
+
+.usg-image-placeholder {
+  color: #6b7280;
+  font-style: italic;
+  text-align: center;
+  font-size: 15px;
+}
+
+.vlm-yorum-kutusu {
+  background-color: #f8f9ff;
+  border: 1px solid #cbd5e1;
+  padding: 20px;
+  border-radius: 12px;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #1f2937;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+.usg-icerik-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  gap: 30px;
+  align-items: stretch;
+  margin-top: 20px;
+}
+
+.usg-goruntu-alani {
+  background-color: #f9fafb;
+  border: 1px dashed #94a3b8;
+  border-radius: 12px;
+  padding: 16px;
+  min-height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.usg-image-preview {
+  max-width: 100%;
+  max-height: 320px;
+  object-fit: contain;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.usg-image-placeholder {
+  font-style: italic;
+  color: #6b7280;
+  text-align: center;
+  font-size: 15px;
+}
+
+.vlm-yorum-alani {
+  background-color: #f0f4ff;
+  border-left: 6px solid #4a90e2;
+  padding: 20px;
+  border-radius: 12px;
+  font-size: 16px;
+  color: #1f2937;
+  line-height: 1.6;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+.usg-icerik-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  gap: 30px;
+  align-items: start;
+  margin-top: 20px;
+}
+
+/* Sol: Görüntü alanı */
+.usg-goruntu-alani {
+  background-color: #f9fafb;
+  border: none; /* DIŞ ÇERÇEVEYİ KALDIRDIK */
+  border-radius: 12px;
+  padding: 16px;
+  min-height: 280px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.usg-image-preview {
+  max-width: 100%;
+  max-height: 300px;
+  object-fit: contain;
+  border-radius: 12px;
+}
+
+.usg-image-placeholder {
+  font-style: italic;
+  color: #6b7280;
+  text-align: center;
+  font-size: 15px;
+  border: none;        /* İÇ ÇERÇEVE KALKTI */
+}
+
+/* Sağ: VLM Yorum alanı */
+.vlm-yorum-alani {
+  background-color: #f8faff;
+  padding: 20px;
+  border-radius: 12px;
+  font-size: 16px;
+  color: #1f2937;
+  line-height: 1.6;
+  min-height: 150px;
+  border: 2px solid #3b82f6; /* Belirgin MAVİ kenarlık */
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2); /* Hafif mavi gölge */
+}
+>>>>>>> 800093c8e226d7e237b9ad83ecae085e016bc779
 

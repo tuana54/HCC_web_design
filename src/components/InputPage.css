@@ -264,6 +264,7 @@ select.form-control {
   border-radius: 12px;
 }
 /* Doktor Notu Bölümü */
+<<<<<<< HEAD
 .doctor-note-card {
   background-color: white;
   border-left: 6px solid #3b82f6;
@@ -299,6 +300,48 @@ select.form-control {
   background-color: #ffffff;
   resize: none; /* Uzamasın */
 }
+=======
+.doktor-note-kart {
+  background-color: white;
+  border-left: 6px solid #3b82f6;
+  padding: 24px 20px;
+  border-radius: 12px;
+  margin: 30px auto;
+  max-width: 1180px;         /* Kutunun maksimum genişliği */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  position: relative;
+}
+
+.doktor-note-kart h3 {
+  font-size: 20px;
+  font-weight: bold;
+  color: #1e3a8a;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: absolute;
+  top: -20px;
+  left: 16px;
+  background: white;
+  padding: 0 8px;
+  z-index: 2;
+}
+
+.doktor-textarea {
+  width: 100%;
+  min-height: 130px;
+  font-size: 16px;
+  padding: 12px;
+  resize: vertical;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  background-color: #f9fafb;
+  box-sizing: border-box;
+}
+
+>>>>>>> 800093c8e226d7e237b9ad83ecae085e016bc779
 /* Tüm sayfadaki <h3> başlıklar için genel stil */
 h3 {
   font-size: 20px;

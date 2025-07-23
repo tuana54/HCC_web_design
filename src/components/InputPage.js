@@ -3,6 +3,10 @@ import React, { useState, useEffect } from "react"; // useEffect eklendi
 import { useNavigate } from "react-router-dom";
 import "./InputPage.css";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+<<<<<<< HEAD
+=======
+import { FaUserMd } from "react-icons/fa"; 
+>>>>>>> 800093c8e226d7e237b9ad83ecae085e016bc779
 
 const InputPage = () => {
   const navigate = useNavigate();
@@ -23,6 +27,10 @@ const InputPage = () => {
     BIL: "",
     GGT: "",
     Albumin: "",
+<<<<<<< HEAD
+=======
+    doctor_note: ""
+>>>>>>> 800093c8e226d7e237b9ad83ecae085e016bc779
   });
 
   // YENİ: Sayfa yüklendiğinde kullanıcının giriş yapıp yapmadığını kontrol et
@@ -263,6 +271,23 @@ const InputPage = () => {
         </div>
       </div>
 
+<<<<<<< HEAD
+=======
+       <div className="doktor-note-kart">  
+
+  <h3><FaUserMd /> Doktorun Notu</h3>
+ <textarea
+  name="doctor_note"
+  value={form.doctor_note}
+  onChange={handleChange}
+  placeholder="Doktorun bu hasta için özel notu..."
+  className="doktor-textarea"
+/>
+
+
+</div>
+
+>>>>>>> 800093c8e226d7e237b9ad83ecae085e016bc779
       {/* Hesapla Butonu */}
       <div className="button-container" style={{ marginTop: "40px" }}>
         <button className="calculate-btn" onClick={handleCalculate}>
