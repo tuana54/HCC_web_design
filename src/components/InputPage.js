@@ -1,12 +1,8 @@
-// src/components/InputPage.js (GÜNCEL VERSİYON - user_id gönderiyor)
-import React, { useState, useEffect } from "react"; // useEffect eklendi
+// src/components/InputPage.js (Düzeltilmiş ve Temizlenmiş Hali)
+import { useEffect, useState } from "react";
+import { FaArrowLeft, FaArrowRight, FaUserMd } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import "./InputPage.css";
-import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
-<<<<<<< HEAD
-=======
-import { FaUserMd } from "react-icons/fa"; 
->>>>>>> 800093c8e226d7e237b9ad83ecae085e016bc779
 
 const InputPage = () => {
   const navigate = useNavigate();
@@ -27,21 +23,17 @@ const InputPage = () => {
     BIL: "",
     GGT: "",
     Albumin: "",
-<<<<<<< HEAD
-=======
+    Albumin_and_Globulin_Ratio: "", // Eksik olan bu alan eklendi
     doctor_note: ""
->>>>>>> 800093c8e226d7e237b9ad83ecae085e016bc779
   });
 
-  // YENİ: Sayfa yüklendiğinde kullanıcının giriş yapıp yapmadığını kontrol et
   useEffect(() => {
     const userId = localStorage.getItem('user_id');
     if (!userId) {
       alert("Bu sayfayı görüntülemek için lütfen giriş yapın.");
-      navigate('/'); // Giriş yapmamışsa anasayfaya yönlendir
+      navigate('/');
     }
   }, [navigate]);
-
 
   const [btFile, setBtFile] = useState(null);
   const [ultrasonFile, setUltrasonFile] = useState(null);
@@ -54,58 +46,61 @@ const InputPage = () => {
   };
 
   const handleFileChange = (e, type) => {
-    // ... (bu fonksiyon aynı kalıyor) ...
     const file = e.target.files[0];
     if (file) {
       const fileName = file.name.toLowerCase();
       const is3DFile = fileName.endsWith(".nii") || fileName.endsWith(".nii.gz") || fileName.endsWith(".dcm");
       let previewValue = is3DFile ? file.name : URL.createObjectURL(file);
-      if (type === "bt") { setBtFile(file); setBtImageUrl(previewValue); } 
-      else if (type === "ultrason") { setUltrasonFile(file); setUltrasonImageUrl(previewValue); }
+      if (type === "bt") {
+        setBtFile(file);
+        setBtImageUrl(previewValue);
+      } else if (type === "ultrason") {
+        setUltrasonFile(file);
+        setUltrasonImageUrl(previewValue);
+      }
     } else {
-      if (type === "bt") { setBtFile(null); setBtImageUrl(null); } 
-      else if (type === "ultrason") { setUltrasonFile(null); setUltrasonImageUrl(null); }
+      if (type === "bt") {
+        setBtFile(null);
+        setBtImageUrl(null);
+      } else if (type === "ultrason") {
+        setUltrasonFile(null);
+        setUltrasonImageUrl(null);
+      }
     }
   };
-
 
   const handleCalculate = async () => {
     const userId = localStorage.getItem('user_id');
     if (!userId) {
-        alert("Lütfen tekrar giriş yapın.");
-        navigate('/');
-        return;
+      alert("Lütfen tekrar giriş yapın.");
+      navigate('/');
+      return;
     }
 
-    // ... (form doğrulama kodları aynı kalıyor) ...
     if (!form.name || !form.surname || !form.Yas || !form.gender) {
-        alert("Lütfen hasta bilgilerini (Ad, Soyad, Yaş, Cinsiyet) eksiksiz doldurun.");
-        return;
+      alert("Lütfen hasta bilgilerini (Ad, Soyad, Yaş, Cinsiyet) eksiksiz doldurun.");
+      return;
     }
 
     const labDataForApi = {
-        Yaş: parseFloat(form.Yas),
-        Cinsiyet: form.gender === "Erkek" ? 1 : 0,
-        Albumin: parseFloat(form.Albumin || 0),
-        ALP: parseFloat(form.ALP || 0),
-        ALT: parseFloat(form.ALT || 0),
-        AST: parseFloat(form.AST || 0),
-        BIL: parseFloat(form.BIL || 0),
-        GGT: parseFloat(form.GGT || 0),
+      Yaş: parseFloat(form.Yas),
+      Cinsiyet: form.gender === "Erkek" ? 1 : 0,
+      Albumin: parseFloat(form.Albumin || 0),
+      ALP: parseFloat(form.ALP || 0),
+      ALT: parseFloat(form.ALT || 0),
+      AST: parseFloat(form.AST || 0),
+      BIL: parseFloat(form.BIL || 0),
+      GGT: parseFloat(form.GGT || 0),
+      Albumin_and_Globulin_Ratio: parseFloat(form.Albumin_and_Globulin_Ratio || 0),
     };
 
-    // FormData objesini oluşturma
     const formData = new FormData();
-    
-    // YENİ: Gerekli tüm verileri backend'in beklediği şekilde ekliyoruz
     formData.append("user_id", userId);
     formData.append("patient_name", form.name);
     formData.append("patient_surname", form.surname);
     formData.append("lab_data", JSON.stringify(labDataForApi));
-    
     if (ultrasonFile) formData.append("usg_file", ultrasonFile);
     if (btFile) formData.append("mri_file", btFile);
-    
     formData.append("afp_value", parseFloat(form.afp || 0));
     formData.append("alcohol_consumption", form.alcohol || "");
     formData.append("smoking_status", form.smoking || "");
@@ -127,8 +122,7 @@ const InputPage = () => {
       const result = await response.json();
       console.log("API Yanıtı:", result);
 
-      // Sonuç sayfasına yönlendirirken ham verileri de gönder
-      const rawPatientData = { ...form, ultrasonFileUploaded: !!ultrasonFile, btFileUploaded: !!btFile, ultrasonImageUrl, btImageUrl };
+      const rawPatientData = { ...form, age: form.Yas, ultrasonFileUploaded: !!ultrasonFile, btFileUploaded: !!btFile, ultrasonImageUrl, btImageUrl };
       navigate("/sonuc", {
         state: {
           hastaAdiSoyadi: `${form.name} ${form.surname}`,
@@ -143,7 +137,6 @@ const InputPage = () => {
     }
   };
 
-
   return (
     <div className="input-page">
       <div className="nav-buttons-inside">
@@ -156,7 +149,6 @@ const InputPage = () => {
       </div>
       <h2>Hasta Bilgileri ve Laboratuvar Verileri</h2>
 
-      {/* Hasta Bilgileri */}
       <div className="left-section">
         <h3>Hasta Bilgileri</h3>
         <div className="hasta-grid-2col">
@@ -223,7 +215,6 @@ const InputPage = () => {
         </div>
       </div>
 
-      {/* Laboratuvar Sonuçları */}
       <div className="right-section" style={{ marginTop: "40px" }}>
         <h3>Laboratuvar Sonuçları</h3>
         <div className="lab-grid">
@@ -234,10 +225,10 @@ const InputPage = () => {
           <div className="lab-item"><label>GGT</label><input type="text" name="GGT" placeholder="Örn., 40 U/L" value={form.GGT} onChange={handleChange} className="form-control" /></div>
           <div className="lab-item"><label>BIL</label><input type="text" name="BIL" placeholder="Örn., 0.8 mg/dL" value={form.BIL} onChange={handleChange} className="form-control" /></div>
           <div className="lab-item"><label>Albumin</label><input type="text" name="Albumin" placeholder="Örn., 4.2 g/dL" value={form.Albumin} onChange={handleChange} className="form-control" /></div>
+          <div className="lab-item"><label>Albumin/Globulin Oranı</label><input type="text" name="Albumin_and_Globulin_Ratio" placeholder="Örn., 1.2" value={form.Albumin_and_Globulin_Ratio} onChange={handleChange} className="form-control" /></div>
         </div>
       </div>
 
-      {/* Görüntü Yükleme Alanları */}
       <div className="image-section-wrapper" style={{ marginTop: "40px" }}>
         <div className="bt-section">
           <h3>Ultrason Görüntüsü Yükleme</h3>
@@ -271,24 +262,17 @@ const InputPage = () => {
         </div>
       </div>
 
-<<<<<<< HEAD
-=======
-       <div className="doktor-note-kart">  
+      <div className="doktor-note-kart">
+        <h3><FaUserMd /> Doktorun Notu</h3>
+        <textarea
+          name="doctor_note"
+          value={form.doctor_note}
+          onChange={handleChange}
+          placeholder="Doktorun bu hasta için özel notu..."
+          className="doktor-textarea"
+        />
+      </div>
 
-  <h3><FaUserMd /> Doktorun Notu</h3>
- <textarea
-  name="doctor_note"
-  value={form.doctor_note}
-  onChange={handleChange}
-  placeholder="Doktorun bu hasta için özel notu..."
-  className="doktor-textarea"
-/>
-
-
-</div>
-
->>>>>>> 800093c8e226d7e237b9ad83ecae085e016bc779
-      {/* Hesapla Butonu */}
       <div className="button-container" style={{ marginTop: "40px" }}>
         <button className="calculate-btn" onClick={handleCalculate}>
           Hesapla

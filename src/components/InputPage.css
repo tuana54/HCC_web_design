@@ -264,7 +264,6 @@ select.form-control {
   border-radius: 12px;
 }
 /* Doktor Notu Bölümü */
-<<<<<<< HEAD
 .doctor-note-card {
   background-color: white;
   border-left: 6px solid #3b82f6;
@@ -300,7 +299,7 @@ select.form-control {
   background-color: #ffffff;
   resize: none; /* Uzamasın */
 }
-=======
+
 .doktor-note-kart {
   background-color: white;
   border-left: 6px solid #3b82f6;
@@ -341,7 +340,6 @@ select.form-control {
   box-sizing: border-box;
 }
 
->>>>>>> 800093c8e226d7e237b9ad83ecae085e016bc779
 /* Tüm sayfadaki <h3> başlıklar için genel stil */
 h3 {
   font-size: 20px;

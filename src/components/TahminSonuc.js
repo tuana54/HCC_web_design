@@ -1,31 +1,15 @@
-// src/components/TahminSonuc.js (YENİ VERSİYON - API Çıktılarına Tam Uygun, Yapı Korundu)
-<<<<<<< HEAD
-import React, { useState, useEffect } from "react"; 
-import "./TahminSonuc.css"; // CSS dosyasını içe aktarın
+import { useState } from "react";
+import { FaArrowLeft, FaArrowRight, FaImage, FaLaptopMedical, FaRobot, FaUserMd } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
-import {FaUserMd, FaRobot, FaStethoscope, FaFlask, FaLaptopMedical, FaImage, FaArrowLeft, FaArrowRight } from "react-icons/fa";
-=======
-import React, { useState, useEffect } from "react";
-import "./TahminSonuc.css";
-import { useLocation, useNavigate } from "react-router-dom";
-import { FaUserMd, FaRobot, FaStethoscope, FaFlask, FaLaptopMedical, FaImage, FaPaperPlane, FaArrowLeft, FaArrowRight } from "react-icons/fa";
->>>>>>> 800093c8e226d7e237b9ad83ecae085e016bc779
 import LLMModelComparison from "./LLMModelComparison";
+import "./TahminSonuc.css";
 
 const TahminSonuc = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [doktorYorumu, setDoktorYorumu] = useState(""); 
-  const [doctorSummary, setDoctorSummary] = useState("");
-<<<<<<< HEAD
+  const [doktorYorumu, setDoktorYorumu] = useState("");
 
   const { hastaAdiSoyadi, apiResult, patientDetails } = location.state || {};
-  const [selectedDoctor, setSelectedDoctor] = useState("");
-=======
-  const [selectedDoctor, setSelectedDoctor] = useState("");
-  const { hastaAdiSoyadi, apiResult, patientDetails } = location.state || {};
-
->>>>>>> 800093c8e226d7e237b9ad83ecae085e016bc779
 
   if (!apiResult || !hastaAdiSoyadi) {
     return (
@@ -38,25 +22,11 @@ const TahminSonuc = () => {
   }
 
   const overallRisk = apiResult?.overall_risk_level || "Belirlenemedi";
-  const mriRecommendation = apiResult?.mri_recommendation || false;
-  const finalRecommendation = apiResult?.final_recommendation || "Detaylı öneri bulunamadı.";
-  const detailedSummary = apiResult?.detailed_report_summary || ["Yapay zeka değerlendirmesi bekleniyor."];
 
-  // API'den gelen detailedSummary bir dizi olduğu için, her bir maddeyi ayrı bir paragraf olarak render ediyoruz.
-  const llmYanitElements = detailedSummary.map((item, index) => (
-    <p key={index} className="llm-yanit">{item}</p>
-  ));
-
-  // Risk kutusunun arka plan rengini belirleme (CSS sınıfları TahminSonuc.css'de tanımlı)
   let riskBoxClass = "risk-kutusu";
-  if (overallRisk.includes("Düşük Risk")) riskBoxClass += " risk-dusuk"; // Stringin tamamı yerine 'includes'
+  if (overallRisk.includes("Düşük Risk")) riskBoxClass += " risk-dusuk";
   else if (overallRisk.includes("Orta Risk")) riskBoxClass += " risk-orta";
   else if (overallRisk.includes("Yüksek Risk")) riskBoxClass += " risk-yuksek";
-
-  // Lab değerleri için yardımcı fonksiyon (varsayılan değer ve birim ekler)
-  const getOrDefault = (value, unit = "") => {
-    return (value !== undefined && value !== null && value !== "") ? `${value} ${unit}` : "Belirtilmemiş";
-  };
 
   return (
     <div className="tahmin-container" id="tahmin-container">
@@ -71,7 +41,6 @@ const TahminSonuc = () => {
 
       <h2 className="baslik">AI Destekli Değerlendirme Sonucu</h2>
 
-      {/* Hasta Bilgisi */}
       <div className="kart hasta-kart">
         <h3><FaUserMd className="ikon-kucuk" /> Hasta Bilgisi</h3>
         <p><strong>Ad:</strong> {patientDetails?.name || "-"}</p>
@@ -80,40 +49,40 @@ const TahminSonuc = () => {
         <p><strong>Cinsiyet:</strong> {patientDetails?.gender || "-"}</p>
       </div>
 
-      {/* GENEL HCC RİSK SEVİYESİ */}
       <div className="kart risk-kart">
         <h3 className="kart-baslik">Genel HCC Risk Seviyesi</h3>
         <div className="risk-icerik">
-          <span className={riskBoxClass}>{overallRisk.replace(/ \(.*\)/, '')}</span> {/* Açıklamayı kaldır */}
+          <span className={riskBoxClass}>{overallRisk.replace(/ \(.*\)/, '')}</span>
           <p className="risk-not">
             Not: Bu risk seviyesi yaş, cinsiyet, AFP, ALT, AST gibi klinik ve laboratuvar parametreleri ile görüntüleme bulgularına göre hesaplanmıştır.
           </p>
         </div>
       </div>
 
-      {/* Yapay Zekâ Modelinin Detaylı Değerlendirmesi */}
       <div className="llm-kart">
         <div className="llm-header">
           <h3><FaRobot /> Yapay Zekâ Değerlendirmesi</h3>
         </div>
-        <LLMModelComparison />
+        {/* GÜNCELLEME: Gerekli veriler LLMModelComparison bileşenine aktarılıyor */}
+        <LLMModelComparison 
+            patientDetails={patientDetails} 
+            apiResult={apiResult} 
+        />
       </div>
 
-<<<<<<< HEAD
-      {/* Görüntü Analizi Alanları (USG ve MRI) */}
+      {/* Görüntü Analizi Alanları */}
       <div className="image-analysis-section">
-        {patientDetails?.ultrasonFileUploaded && ( // USG dosyası yüklendiyse göster
+        {patientDetails?.ultrasonFileUploaded && (
           <div className="kart image-kart">
             <FaImage className="ikon" />
             <div>
               <h3>Ultrason Görüntüsü Analizi</h3>
               {patientDetails.ultrasonImageUrl ? (
-                  // 2D görüntü ise önizleme (blob: ile başlıyorsa), 3D ise dosya adını göster
-                  patientDetails.ultrasonImageUrl.startsWith("blob:") ? (
-                    <img src={patientDetails.ultrasonImageUrl} alt="Ultrason Görüntüsü Önizlemesi" className="loaded-image-preview" />
-                  ) : (
-                    <p>Yüklü Dosya: {patientDetails.ultrasonImageUrl}</p> // 3D dosya adı
-                  )
+                patientDetails.ultrasonImageUrl.startsWith("blob:") ? (
+                  <img src={patientDetails.ultrasonImageUrl} alt="Ultrason Görüntüsü Önizlemesi" className="loaded-image-preview" />
+                ) : (
+                  <p>Yüklü Dosya: {patientDetails.ultrasonImageUrl}</p>
+                )
               ) : (
                 <p className="usg-aciklama">USG görüntüsü önizlemesi yüklenemedi.</p>
               )}
@@ -121,16 +90,16 @@ const TahminSonuc = () => {
           </div>
         )}
 
-        {patientDetails?.btFileUploaded && ( // MR (BT) dosyası yüklendiyse göster
+        {patientDetails?.btFileUploaded && (
           <div className="kart image-kart">
-            <FaLaptopMedical className="ikon" /> {/* MR için LaptopMedical ikonu */}
+            <FaLaptopMedical className="ikon" />
             <div>
               <h3>MR Görüntüsü Analizi</h3>
               {patientDetails.btImageUrl ? (
                 patientDetails.btImageUrl.startsWith("blob:") ? (
                   <img src={patientDetails.btImageUrl} alt="MR Görüntüsü Önizlemesi" className="loaded-image-preview" />
                 ) : (
-                  <p>Yüklü Dosya: {patientDetails.btImageUrl}</p> // 3D dosya adı
+                  <p>Yüklü Dosya: {patientDetails.btImageUrl}</p>
                 )
               ) : (
                 <p className="mri-aciklama">MR görüntüsü önizlemesi yüklenemedi.</p>
@@ -140,92 +109,16 @@ const TahminSonuc = () => {
         )}
       </div>
 
-      {/* Doktor Geri Bildirim Alanı */}
       <div className="kart">
         <h3><FaUserMd /> Doktor Geri Bildirimi</h3>
-        <textarea 
-          className="doktor-textarea" 
-          rows={4} 
+        <textarea
+          className="doktor-textarea"
+          rows={4}
           placeholder="Doktor yorumunu buraya yazabilir..."
           value={doktorYorumu}
           onChange={(e) => setDoktorYorumu(e.target.value)}
         ></textarea>
       </div>
-      {/*
-      <div className="button-container">
-        <button
-          className="calculate-btn"
-          onClick={() =>
-            navigate("/pdfrapor", {
-              state: {
-                hastaAdiSoyadi: hastaAdiSoyadi,
-                apiResult: apiResult,
-                patientDetails: patientDetails,
-                doktorYorumu: doktorYorumu,
-              },
-            })
-          }
-        >
-          PDF Raporu Oluştur
-        </button>
-      </div>
-      */}
-=======
-  <div className="kart usg-goruntu-kart">
-  <h3>
-    <i className="fas fa-image ikon"></i> USG Görüntü Analizi
-  </h3>
-
-  <div className="usg-icerik-grid">
-    {/* Sol: Görüntü kutusu */}
-    <div className="usg-goruntu-alani">
-      {patientDetails?.ultrasonImageUrl && patientDetails.ultrasonImageUrl.startsWith("blob:") ? (
-        <img
-          src={patientDetails.ultrasonImageUrl}
-          alt="USG Görüntüsü"
-          className="usg-image-preview"
-        />
-      ) : (
-        <div className="usg-image-placeholder">
-          Görüntü burada görüntülenecek (placeholder)
-        </div>
-      )}
-    </div>
-
-    {/* Sağ: VLM Yorum */}
-    <div className="vlm-yorum-alani">
-      {apiResult?.vlm_yanit ? (
-        <p>{apiResult.vlm_yanit}</p>
-      ) : (
-        <p className="usg-placeholder">USG analizi henüz sağlanmadı.</p>
-      )}
-    </div>
-  </div>
-</div>
-
-
-
-
-
-      {/* Doktor Geri Bildirim Alanı */}
-      <div className="kart doktor-yorum-kapsayici">
-        <h3><FaUserMd /> Doktor Geri Bildirimi</h3>
-        <div className="doktor-yorum-wrapper">
-          <textarea 
-            className="doktor-textarea"
-            placeholder="Doktor yorumunu buraya yazabilir..."
-            value={doktorYorumu}
-            onChange={(e) => setDoktorYorumu(e.target.value)}
-          />
-          <button
-            className="ikon-gonder-btn"
-            onClick={() => alert("Yorumladığınız için teşekkür ederiz.")}
-          >
-            <FaPaperPlane />
-          </button>
-        </div>
-      </div>
->>>>>>> 800093c8e226d7e237b9ad83ecae085e016bc779
     </div>
   );
 };

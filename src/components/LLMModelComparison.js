@@ -1,7 +1,5 @@
-// src/components/LLMModelComparison.js
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import "./TahminSonuc.css"; // CSS dosyasını içe aktarmaya devam edin
+import { useState } from "react";
+import "./TahminSonuc.css";
 
 const modelSummaries = {
   "Dr. Ayşe": "Görüntü analizine dayalı düşük risk tahmini sunar.",
@@ -11,48 +9,50 @@ const modelSummaries = {
   "Dr. Zeynep": "Uzun vadeli hasta takibine odaklı yapay zekâ modelidir.",
 };
 
-const modelReports = {
-  "Dr. Ayşe": `Detaylı rapor: Görüntü tabanlı analizlerle model düşük risk göstermiştir...`,
-  "Dr. Can": `Detaylı rapor: AFP, ALT, AST ve ALP düzeyleri değerlendirildi...`,
-  "Dr. Elif": `Detaylı rapor: Hem laboratuvar hem de görüntüleme verileri entegre edilerek...`,
-  "Dr. Murat": `Detaylı rapor: Modelimiz, derin sinir ağlarıyla öğrenim sağladı...`,
-  "Dr. Zeynep": `Detaylı rapor: Bu model, geçmiş hasta verileriyle uzun vadeli takip analizi sunar...`,
-};
-
-const LLMModelComparison = () => {
+// Component'in artık (patientDetails, apiResult) props'larını aldığından emin olun
+const LLMModelComparison = ({ patientDetails, apiResult }) => {
   const [selectedModel, setSelectedModel] = useState("Dr. Ayşe");
-  const navigate = useNavigate();
 
   const handleBoxClick = () => {
-    if (selectedModel) {
-      navigate("/llmrapor", {
-        state: {
-          doctor: selectedModel,
-          rapor: modelReports[selectedModel],
-        },
-      });
+    // Verilerin gelip gelmediğini kontrol et
+    if (!patientDetails || !apiResult) {
+      alert("Rapor verisi bulunamadı. Lütfen sayfayı yenileyin.");
+      return;
     }
+
+    // Yeni sekmeye aktarılacak verileri hazırla
+    const reportData = {
+      patientDetails,
+      apiResult,
+      selectedDoctor: selectedModel,
+      doctorSummary: modelSummaries[selectedModel],
+    };
+
+    // Veriyi tarayıcının oturum deposuna kaydet
+    sessionStorage.setItem('reportDataForLlm', JSON.stringify(reportData));
+    
+    // Rapor sayfasını yeni bir sekmede aç
+    window.open('/llmrapor', '_blank');
   };
 
   return (
-   
-    <div className="llm-yatay-alan"> 
-      {/* Dropdown */}
-      <select
-        className="doktor-select"
-        value={selectedModel}
-        onChange={(e) => setSelectedModel(e.target.value)}
-      >
-        {Object.keys(modelSummaries).map((model) => (
-          <option key={model} value={model}>
-            {model}
-          </option>
-        ))}
-      </select>
+    <div className="llm-yapay-kapsayici">
+      <div className="llm-yatay-alan">
+        <select
+          className="doktor-select"
+          value={selectedModel}
+          onChange={(e) => setSelectedModel(e.target.value)}
+        >
+          {Object.keys(modelSummaries).map((model) => (
+            <option key={model} value={model}>
+              {model}
+            </option>
+          ))}
+        </select>
 
-      {/* Özet kutusu */}
-      <div className="doktor-ozet-kutu" onClick={handleBoxClick}>
-        <strong>{selectedModel}:</strong> {modelSummaries[selectedModel]}
+        <div className="doktor-ozet-kutu" onClick={handleBoxClick}>
+          <strong>{selectedModel}:</strong> {modelSummaries[selectedModel]}
+        </div>
       </div>
     </div>
   );
