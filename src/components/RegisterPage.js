@@ -54,13 +54,7 @@ const RegisterPage = () => {
           value={form.email}
           onChange={handleChange}
         />
-        <input
-          type="text"
-          name="username"
-          placeholder="Kullanıcı Adı"
-          value={form.username}
-          onChange={handleChange}
-        />
+        
         <input
           type="password"
           name="password"

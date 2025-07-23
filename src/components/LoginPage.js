@@ -23,10 +23,11 @@ const LoginPage = ({ onLogin }) => {
         </div>
 
         <div className="login-box">
-          <input type="text" placeholder="Kullanıcı Adı" />
+          <input type="email" placeholder="E-posta" />
           <input type="password" placeholder="Şifre" />
           <button onClick={handleLogin}>Giriş Yap</button>
-
+ 
+        
           <div className="login-footer">
             <p className="forgot-password">Şifrenizi mi unuttunuz?</p>
             <p className="register-link">
