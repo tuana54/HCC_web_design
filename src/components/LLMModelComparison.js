@@ -1,7 +1,7 @@
 // src/components/LLMModelComparison.js
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./TahminSonuc.css";
+import "./TahminSonuc.css"; // CSS dosyasını içe aktarmaya devam edin
 
 const modelSummaries = {
   "Dr. Ayşe": "Görüntü analizine dayalı düşük risk tahmini sunar.",
@@ -35,25 +35,24 @@ const LLMModelComparison = () => {
   };
 
   return (
-    <div className="llm-yapay-kapsayici">
-      <div className="llm-yatay-alan">
-        {/* Dropdown */}
-        <select
-          className="doktor-select"
-          value={selectedModel}
-          onChange={(e) => setSelectedModel(e.target.value)}
-        >
-          {Object.keys(modelSummaries).map((model) => (
-            <option key={model} value={model}>
-              {model}
-            </option>
-          ))}
-        </select>
+   
+    <div className="llm-yatay-alan"> 
+      {/* Dropdown */}
+      <select
+        className="doktor-select"
+        value={selectedModel}
+        onChange={(e) => setSelectedModel(e.target.value)}
+      >
+        {Object.keys(modelSummaries).map((model) => (
+          <option key={model} value={model}>
+            {model}
+          </option>
+        ))}
+      </select>
 
-        {/* Özet kutusu */}
-        <div className="doktor-ozet-kutu" onClick={handleBoxClick}>
-          <strong>{selectedModel}:</strong> {modelSummaries[selectedModel]}
-        </div>
+      {/* Özet kutusu */}
+      <div className="doktor-ozet-kutu" onClick={handleBoxClick}>
+        <strong>{selectedModel}:</strong> {modelSummaries[selectedModel]}
       </div>
     </div>
   );

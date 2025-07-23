@@ -299,6 +299,9 @@ risk-kutusu.risk-orta {
 }
 .llm-yatay-alan {
   display: flex;
+  flex-grow: 1;
+  width: 97%;
+  box-sizing: border-box;
   align-items: center;
   gap: 20px;
   flex-wrap: wrap;
@@ -321,7 +324,7 @@ risk-kutusu.risk-orta {
   border-left: 4px solid #4a90e2;
   border-radius: 8px;
   min-width: 400px;
-  max-width: 500px;
+  
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   transition: all 0.3s ease;
   font-size: 1rem;
@@ -329,6 +332,8 @@ risk-kutusu.risk-orta {
   height: 52px;
   display: flex;
   align-items: center;
+  flex-grow: 1;
+  box-sizing: border-box; 
 }
 
 
