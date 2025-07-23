@@ -6,7 +6,6 @@ import LoginPage from './components/LoginPage';
 import RegisterPage from './components/RegisterPage';
 import InputPage from './components/InputPage'; 
 import TahminSonuc from './components/TahminSonuc';
-import PdfRapor from './components/PdfRapor'; 
 import LLMRaporu from "./components/LLMRaporu";
 
 import './App.css'; // Genel stil dosyanız
@@ -22,7 +21,6 @@ function App() {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/input" element={<InputPage />} />
           <Route path="/sonuc" element={<TahminSonuc />} />
-          <Route path="/pdfrapor" element={<PdfRapor />} />
           <Route path="/llmrapor" element={<LLMRaporu />} />
 
         </Routes>
