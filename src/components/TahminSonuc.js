@@ -1,21 +1,19 @@
 // src/components/TahminSonuc.js (YENİ VERSİYON - API Çıktılarına Tam Uygun, Yapı Korundu)
-import React, { useState } from "react"; // useState artık kullanılıyor (doktorYorumu için)
+import React, { useState, useEffect } from "react"; 
 import "./TahminSonuc.css"; // CSS dosyasını içe aktarın
 import { useLocation, useNavigate } from "react-router-dom";
-import {FaUserMd, FaRobot, FaStethoscope, FaFlask, FaLaptopMedical, FaImage } from "react-icons/fa";
-import { FaArrowLeft , FaArrowRight} from "react-icons/fa";
-import { useEffect } from "react"; // en başta import edilmeli
+import {FaUserMd, FaRobot, FaStethoscope, FaFlask, FaLaptopMedical, FaImage, FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import LLMModelComparison from "./LLMModelComparison";
 
 const TahminSonuc = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [doktorYorumu, setDoktorYorumu] = useState(""); // React.useState yerine useState kullandık
+  const [doktorYorumu, setDoktorYorumu] = useState(""); 
   const [doctorSummary, setDoctorSummary] = useState("");
 
-
   const { hastaAdiSoyadi, apiResult, patientDetails } = location.state || {};
-const [selectedDoctor, setSelectedDoctor] = useState("");
+  const [selectedDoctor, setSelectedDoctor] = useState("");
+
   if (!apiResult || !hastaAdiSoyadi) {
     return (
       <div className="tahmin-container">
@@ -50,13 +48,13 @@ const [selectedDoctor, setSelectedDoctor] = useState("");
   return (
     <div className="tahmin-container" id="tahmin-container">
       <div className="nav-buttons-inside">
-  <button className="nav-btn" onClick={() => navigate(-1)}>
-    <FaArrowLeft className="nav-icon" />
-  </button>
-  <button className="nav-btn" onClick={() => navigate(+1)}>
-    <FaArrowRight className="nav-icon" />
-  </button>
-</div>
+        <button className="nav-btn" onClick={() => navigate(-1)}>
+          <FaArrowLeft className="nav-icon" />
+        </button>
+        <button className="nav-btn" onClick={() => navigate(+1)}>
+          <FaArrowRight className="nav-icon" />
+        </button>
+      </div>
 
       <h2 className="baslik">AI Destekli Değerlendirme Sonucu</h2>
 
@@ -80,17 +78,13 @@ const [selectedDoctor, setSelectedDoctor] = useState("");
         </div>
       </div>
 
-      
-
       {/* Yapay Zekâ Modelinin Detaylı Değerlendirmesi */}
       <div className="llm-kart">
-<div className="llm-header">
-<h3><FaRobot /> Yapay Zekâ Değerlendirmesi</h3>
-</div>
-<LLMModelComparison />
-
-</div>
-
+        <div className="llm-header">
+          <h3><FaRobot /> Yapay Zekâ Değerlendirmesi</h3>
+        </div>
+        <LLMModelComparison />
+      </div>
 
       {/* Görüntü Analizi Alanları (USG ve MRI) */}
       <div className="image-analysis-section">
@@ -100,12 +94,12 @@ const [selectedDoctor, setSelectedDoctor] = useState("");
             <div>
               <h3>Ultrason Görüntüsü Analizi</h3>
               {patientDetails.ultrasonImageUrl ? (
-                 // 2D görüntü ise önizleme (blob: ile başlıyorsa), 3D ise dosya adını göster
-                patientDetails.ultrasonImageUrl.startsWith("blob:") ? (
-                  <img src={patientDetails.ultrasonImageUrl} alt="Ultrason Görüntüsü Önizlemesi" className="loaded-image-preview" />
-                ) : (
-                  <p>Yüklü Dosya: {patientDetails.ultrasonImageUrl}</p> // 3D dosya adı
-                )
+                  // 2D görüntü ise önizleme (blob: ile başlıyorsa), 3D ise dosya adını göster
+                  patientDetails.ultrasonImageUrl.startsWith("blob:") ? (
+                    <img src={patientDetails.ultrasonImageUrl} alt="Ultrason Görüntüsü Önizlemesi" className="loaded-image-preview" />
+                  ) : (
+                    <p>Yüklü Dosya: {patientDetails.ultrasonImageUrl}</p> // 3D dosya adı
+                  )
               ) : (
                 <p className="usg-aciklama">USG görüntüsü önizlemesi yüklenemedi.</p>
               )}
@@ -136,34 +130,32 @@ const [selectedDoctor, setSelectedDoctor] = useState("");
       <div className="kart">
         <h3><FaUserMd /> Doktor Geri Bildirimi</h3>
         <textarea 
-  className="doktor-textarea" 
-  rows={4} 
-  placeholder="Doktor yorumunu buraya yazabilir..."
-  value={doktorYorumu}
-  onChange={(e) => setDoktorYorumu(e.target.value)}
-></textarea>
+          className="doktor-textarea" 
+          rows={4} 
+          placeholder="Doktor yorumunu buraya yazabilir..."
+          value={doktorYorumu}
+          onChange={(e) => setDoktorYorumu(e.target.value)}
+        ></textarea>
       </div>
-{/*
-  <div className="button-container">
-    <button
-      className="calculate-btn"
-      onClick={() =>
-        navigate("/pdfrapor", {
-          state: {
-            hastaAdiSoyadi: hastaAdiSoyadi,
-            apiResult: apiResult,
-            patientDetails: patientDetails,
-            doktorYorumu: doktorYorumu,
-          },
-        })
-      }
-    >
-      PDF Raporu Oluştur
-    </button>
-  </div>
-*/}
-
-
+      {/*
+      <div className="button-container">
+        <button
+          className="calculate-btn"
+          onClick={() =>
+            navigate("/pdfrapor", {
+              state: {
+                hastaAdiSoyadi: hastaAdiSoyadi,
+                apiResult: apiResult,
+                patientDetails: patientDetails,
+                doktorYorumu: doktorYorumu,
+              },
+            })
+          }
+        >
+          PDF Raporu Oluştur
+        </button>
+      </div>
+      */}
     </div>
   );
 };

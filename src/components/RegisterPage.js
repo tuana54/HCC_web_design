@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './LoginPage.css'; // CSS aynı kalabilir
-import logo from '../assets/HCCentinel.png'; // Logo
+import './LoginPage.css'; // Stil için LoginPage.css'i kullanabiliriz
+import logo from '../assets/HCCentinel.png'; 
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -9,18 +9,54 @@ const RegisterPage = () => {
     name: '',
     surname: '',
     email: '',
-    username: '',
     password: ''
   });
+  const [error, setError] = useState(''); // Hata mesajları için
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
   };
 
-  const handleRegister = () => {
-    console.log('Hesap oluşturuldu:', form);
-    navigate('/');
+  // handleRegister fonksiyonunu async yapıp API'ye istek gönderecek şekilde güncelledik
+  const handleRegister = async (event) => {
+    event.preventDefault(); // Formun default davranışını engelle
+    setError(''); // Her denemede eski hatayı temizle
+
+    // Şifre ve email kontrolü
+    if (!form.email || !form.password) {
+        setError('E-posta ve şifre alanları zorunludur.');
+        return;
+    }
+
+    try {
+        const response = await fetch('http://localhost:8000/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                name: form.name,
+                surname: form.surname,
+                email: form.email,
+                password: form.password,
+            }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            // API'den gelen hata mesajını kullan
+            throw new Error(data.detail || 'Kayıt sırasında bir hata oluştu.');
+        }
+
+        alert('Hesap başarıyla oluşturuldu! Şimdi giriş yapabilirsiniz.');
+        navigate('/'); // Başarılı kayıttan sonra giriş sayfasına yönlendir
+
+    } catch (err) {
+        console.error('Kayıt hatası:', err);
+        setError(err.message); // Hata mesajını state'e ata
+    }
   };
 
   return (
@@ -32,7 +68,12 @@ const RegisterPage = () => {
         </p>
       </div>
 
-      <div className="login-box" style={{ marginTop: '0px' }}>
+      {/* Form etiketini kullanmak daha doğru */}
+      <form className="login-box" style={{ marginTop: '0px' }} onSubmit={handleRegister}>
+        
+        {/* HATA MESAJINI GÖSTERMEK İÇİN EKLENEN KISIM */}
+        {error && <p className="error-message">{error}</p>}
+        
         <input
           type="text"
           name="name"
@@ -53,24 +94,25 @@ const RegisterPage = () => {
           placeholder="E-posta"
           value={form.email}
           onChange={handleChange}
+          required
         />
-        
         <input
           type="password"
           name="password"
           placeholder="Şifre"
           value={form.password}
           onChange={handleChange}
+          required
         />
-        <button onClick={handleRegister}>Hesap Oluştur</button>
+        <button type="submit">Hesap Oluştur</button>
 
         <div className="login-footer">
           <p className="register-link">
             Zaten hesabınız var mı?{' '}
-            <span onClick={() => navigate('/')}>Giriş yap</span>
+            <span onClick={() => navigate('/')} style={{cursor: 'pointer', color: '#007bff'}}>Giriş yap</span>
           </p>
         </div>
-      </div>
+      </form>
     </div>
   );
 };
