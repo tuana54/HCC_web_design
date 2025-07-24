@@ -154,7 +154,7 @@ risk-kutusu.risk-orta {
   border-left: 6px solid #6366f1; /* Mavi-mor kenarlık */
   padding: 20px;
   border-radius: 12px;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
@@ -272,22 +272,21 @@ risk-kutusu.risk-orta {
   margin-top: 30px;
 }
 .nav-buttons-inside {
-  position: absolute;
-  top: 0;
-  left: 0;
-  transform: translate(-50%, -50%);  /* tam köşeye oturtur */
+  position: absolute; /* Artık .tahmin-container'a göre konumlanır */
+  top: 20px;          /* Mavi alanın içine yerleştirmek için */
+  right: 20px;
   display: flex;
-  gap: 8px;
+  gap: 10px;
   z-index: 10;
 }
 
 .nav-btn {
-  background-color:  #1e3a8a;
+  background-color: transparent; /* Şeffaf arka plan */
   border: none;
-  border-radius: 50%;
-  padding: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 6px;
   cursor: pointer;
+  border-radius: 50%;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.1); /* Hafif gölge */
   transition: transform 0.2s ease;
 }
 
@@ -297,8 +296,9 @@ risk-kutusu.risk-orta {
 
 .nav-icon {
   font-size: 20px;
-  color: #1e3a8a;
+  color: #003366; /* Mavi tonla uyumlu */
 }
+
 
 .calculate-btn {
   padding: 12px 28px;
@@ -345,46 +345,51 @@ risk-kutusu.risk-orta {
 .llm-yatay-alan {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 12px; /* kutular arası boşluk azaltıldı */
   flex-wrap: wrap;
-  justify-content: flex-start;
 }
+/* Doktor Seçim Kutusu */
 .doktor-select {
-  padding: 12px 16px;
-  font-size: 1rem;
+  padding: 10px 12px;
   border-radius: 8px;
-  border: 1px solid #ccc;
-  width: 200px;
-  height: 52px;
-   cursor: pointer; 
+  font-size: 15px;
+  border: 2px solid #2c3e50; /* koyulaştırılmış çerçeve */
+  outline: none;
+  min-width: 200px;
+  box-shadow: none;
+  font-family: 'Segoe UI', sans-serif;
+  cursor: pointer;
 }
 
 .doktor-ozet-kutu {
+  flex: 0 0 65%;
+ width: 60%;          /* Toplam alanın %60'ı kadar */
+  max-width: 600px;    /* Genişlik asla 400px’i geçmesin */
+  padding: 10px 14px;
+  font-size: 14px;
+  border-radius: 10px;
+  background-color: #f8fbff;
+  color: #1e293b;
+  border: 1px solid #cbd5e1;
+  box-shadow: 0 4px 12px rgba(30, 58, 138, 0.1);
   cursor: pointer;
-  background-color: #f0f4ff;
-  padding: 12px 16px;
-  border-left: 4px solid #4a90e2;
-  border-radius: 8px;
-  min-width: 400px;
-  max-width: 500px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   transition: all 0.3s ease;
-  font-size: 1rem;
-  color: #333;
-  height: 52px;
+  min-height: 50px;
   display: flex;
   align-items: center;
+  font-family: 'Segoe UI', sans-serif;
 }
+
 
 
 .doktor-ozet-kutu:hover {
-  background-color: #e4ecff;
+  background-color: #e0ebff;
+   border-color: #1e3a8a;
 }
 .llm-yapay-kapsayici {
-  display: flex;
-  justify-content: flex-start;  /* sola yaslı */
-  margin-left: 80px;            /* sağa doğru kaydırır */
-  margin-top: 20px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  width: 100%;
 }
 .doktor-select:hover {
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.2); /* Gölgelendirme efekti */
@@ -743,4 +748,8 @@ risk-kutusu.risk-orta {
 /* Hover anında göster */
 .yeni-hasta-buton:hover .yeni-hasta-tooltip {
   opacity: 1;
+}
+.yeni-hasta-ikon {
+  font-size: 23px;  /* ikon boyutunu büyütüyoruz */
+  color: white;     /* ikonun rengi butonla uyumlu */
 }

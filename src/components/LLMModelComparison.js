@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./TahminSonuc.css";
+import { FaFileAlt } from "react-icons/fa";
 
 const modelSummaries = {
   "Dr. Ayşe": "Görüntü analizine dayalı düşük risk tahmini sunar.",
@@ -52,8 +53,12 @@ const LLMModelComparison = ({ patientDetails, apiResult }) => {
         </select>
 
         <div className="doktor-ozet-kutu" onClick={handleBoxClick}>
-          <strong>{selectedModel}:</strong> {modelSummaries[selectedModel]}
-        </div>
+  <FaFileAlt style={{ fontSize: "20px", marginRight: "8px", color: "#1e3a8a" }} />
+
+  <strong>{selectedModel}:</strong> {modelSummaries[selectedModel]}
+</div>
+
+
       </div>
     </div>
   );

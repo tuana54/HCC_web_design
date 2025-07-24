@@ -6,6 +6,7 @@
   height: 100vh;
   font-family: 'Segoe UI', sans-serif;
   padding-top: 40px; /* Sayfanın en üstünden boşluk */
+  background-color: #f1f5f9;
 }
 
 .login-header {

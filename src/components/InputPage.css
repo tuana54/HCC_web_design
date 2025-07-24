@@ -1,11 +1,12 @@
 /* InputPage.css */
 
 .input-page {
+  position: relative;
   max-width: 1280px;
   margin: 30px auto;
   padding: 40px;
   font-family: "Segoe UI", sans-serif;
-  background-color: #f0f4f8;  /* sayfanın arka planı*/
+  background-color: #f0f4f8;
   border-radius: 16px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 }
@@ -13,11 +14,10 @@
 .input-page h2 {
   font-size: 28px;
   font-weight: bold;
-  color: #1e3a8a; /* Aynı mavi ton */
+  color: #1e3a8a;
   margin-bottom: 40px;
   font-family: 'Segoe UI', sans-serif;
 }
-
 
 .flex-row {
   display: flex;
@@ -38,7 +38,7 @@
   font-weight: bold;
   font-family: 'Segoe UI', sans-serif;
   margin-bottom: 20px;
-  color:  #1e3a8a; /* Mavi ton */
+  color:  #1e3a8a;
 }
 
 .form-group {
@@ -52,17 +52,15 @@
 .lab-item label {
   font-weight: 500;
   font-size: 14px;
-  color: #1e3a8a; /* Mavi ton */
+  color: #1e3a8a;
   margin-bottom: 4px;
   font-family: 'Segoe UI', sans-serif;
 }
 
-
-/* Ortak label stili */
 label {
   font-weight: 500;
   font-size: 14px;
-  color: #1e3a8a;  /* TahminSonuç ve InputPage ile uyumlu mavi */
+  color: #1e3a8a;
   font-family: 'Segoe UI', sans-serif;
   margin-bottom: 4px;
   display: block;
@@ -70,11 +68,10 @@ label {
 }
 
 .form-group input:focus {
-  border-color: #3b82f6; /* Fokus rengini mavi yap */
+  border-color: #3b82f6;
   outline: none;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); /* Fokus için hafif mavi parıltı */
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
 }
-
 
 .lab-grid {
   display: grid;
@@ -86,8 +83,6 @@ label {
   display: flex;
   flex-direction: column;
 }
-
-
 
 .lab-item input {
   padding: 8px 10px;
@@ -133,8 +128,8 @@ label {
 }
 
 .upload-area {
-  border: 2px dashed #edf0f4;/* MR / ULTRASON ALANININ KENAR ÇİZGİSİ */
-  background-color: #ffffff;/* MR / ULTRASON ALANININ ARKA PLANI */
+  border: 2px dashed #edf0f4;
+  background-color: #ffffff;
   padding: 40px;
   text-align: center;
   border-radius: 12px;
@@ -142,10 +137,15 @@ label {
   margin-top: 8px;
   display: block;
   transition: 0.3s;
+  height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fafafa;
 }
 
 .upload-area:hover {
-  background-color: #e0f2fe;/* MR / ULTRASON ALANINA HOVER (ÜZERİNE GELİNİNCE) RENGİ */
+  background-color: #e0f2fe;
 }
 
 .upload-area div {
@@ -158,12 +158,12 @@ label {
 .upload-area strong {
   font-size: 15px;
   font-weight: 600;
-  color: #1e3a8a;/* "MR Görüntüsü Yükle" GİBİ KALIN YAZILARIN RENGİ */
+  color: #1e3a8a;
 }
 
 .upload-area small {
   font-size: 11px;
-  color: #8e97a7; /* MR / ULTRASON ALANINDAKİ AÇIKLAMA YAZISI (gri) */
+  color: #8e97a7;
 }
 
 input[type="file"] {
@@ -178,8 +178,8 @@ input[type="file"] {
 
 .calculate-btn {
   padding: 12px 28px;
-  background-color: #0046dd;/* HESAPLA BUTONUNUN ARKA PLANI */
-  color: #ffffff;/* HESAPLA BUTONU YAZI RENGİ */
+  background-color: #0046dd;
+  color: #ffffff;
   border: none;
   font-size: 15px;
   border-radius: 9999px;
@@ -212,19 +212,19 @@ input[type="file"] {
   -webkit-appearance: none;
   -moz-appearance: none;
 }
+
 .form-control:focus {
   border-color: #3b82f6;
   outline: none;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
 }
 
-
 select.form-control {
   background-image: url("data:image/svg+xml;utf8,<svg fill='gray' height='12' viewBox='0 0 24 24' width='12' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
   background-repeat: no-repeat;
   background-position: right 10px center;
   background-size: 12px;
-  padding-right: 30px; /* Dropdown oku için */
+  padding-right: 30px;
 }
 
 .hasta-grid {
@@ -232,6 +232,7 @@ select.form-control {
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 20px;
 }
+
 .hasta-grid-2col {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -249,61 +250,11 @@ select.form-control {
   max-width: 48%;
 }
 
-.upload-area {
-  border: 2px dashed #ccc;
-  border-radius: 12px;
-  padding: 20px;
-  text-align: center;
-  cursor: pointer;
-  height: 250px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #fafafa;
-  transition: border-color 0.3s;
-}
-
 .upload-area img {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
   border-radius: 12px;
-}
-/* Doktor Notu Bölümü */
-.doctor-note-card {
-  background-color: white;
-  border-left: 6px solid #3b82f6;
-  padding: 20px 24px;
-  border-radius: 12px;
-  margin-top: 40px;
-  width: 100%; /* Tüm satırı kapla */
-  max-width: none; /* Üst sınır koyma */
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
-  box-sizing: border-box;
-}
-
-.doctor-note-card h3 {
-  font-size: 18px;
-  font-weight: 600;
-  color: #1e3a8a;
-  display: flex;
-  align-items: center;
-  margin-bottom: 12px;
-}
-
-.doctor-note-card h3 svg {
-  margin-right: 8px;
-}
-
-.doctor-note-card textarea {
-  width: 100%;
-  height: 120px; /* Sabit yükseklik */
-  font-size: 15px;
-  padding: 12px;
-  border-radius: 8px;
-  border: 1.5px solid #ccdfff;
-  background-color: #ffffff;
-  resize: none; /* Uzamasın */
 }
 
 .doktor-note-kart {
@@ -312,7 +263,7 @@ select.form-control {
   padding: 24px 20px;
   border-radius: 12px;
   margin: 30px auto;
-  max-width: 1180px;         /* Kutunun maksimum genişliği */
+  max-width: 1180px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
   position: relative;
 }
@@ -334,7 +285,6 @@ select.form-control {
 }
 
 .doktor-textarea {
-
   width: 100%;
   min-height: 130px;
   font-size: 16px;
@@ -345,17 +295,14 @@ select.form-control {
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
   background-color: #f9fafb;
   box-sizing: border-box;
-
-  margin-top: 16px; /* bu satır eklenmiş olmalı */
+  margin-top: 16px;
 }
 
-
-/* Tüm sayfadaki <h3> başlıklar için genel stil */
 h3 {
   font-size: 20px;
   font-weight: bold;
   font-family: 'Segoe UI', sans-serif;
-  color: #1e3a8a; /* Lacivert */
+  color: #1e3a8a;
   margin-bottom: 16px;
 }
 .nav-buttons-inside {
@@ -364,29 +311,35 @@ h3 {
   left: 20px;
   display: flex;
   gap: 10px;
-  z-index: 1000;
+  z-index: 10;
 }
 
 .nav-btn {
-  background-color: rgba(255, 255, 255, 0.8); /* Yarı saydam açık arka plan */
+  background-color: #ffffff; /* Beyaz arka plan */
   border: none;
-  border-radius: 50%;
-  padding: 10px;
+  padding: 8px;
   cursor: pointer;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  transition: transform 0.2s ease;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.2s ease, transform 0.2s ease;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .nav-btn:hover {
-  background-color: rgba(30, 64, 175, 0.1); /* hover efekti */
-  transform: scale(1.05);
+  transform: scale(1.1);
 }
 
 .nav-icon {
-  color: #1e3a8a; /* Lacivert ikon */
-  font-size: 18px;
+  font-size: 20px;
+  color: #003366; /* Aynı mavi tonu */
 }
+.input-filled {
+  border: 1.2px solid #375a9e;
+  box-shadow: 0 0 2px rgba(30, 58, 138, 0.15);
+}
+
 

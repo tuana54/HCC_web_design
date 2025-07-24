@@ -1,4 +1,4 @@
-// src/components/InputPage.js (Düzeltilmiş ve Temizlenmiş Hali)
+// src/components/InputPage.js
 import { useEffect, useState } from "react";
 import { FaArrowLeft, FaArrowRight, FaUserMd } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
@@ -7,38 +7,38 @@ import "./InputPage.css";
 const InputPage = () => {
   const navigate = useNavigate();
 
-    // 1. localStorage'dan veri getiren fonksiyon (hook dışında tanımlanır)
   const getInitialForm = () => {
     const savedForm = localStorage.getItem("hastaFormData");
     return savedForm ? JSON.parse(savedForm) : {
+      name: "",
+      surname: "",
+      Yas: "",
+      gender: "",
+      alcohol: "",
+      smoking: "",
+      hcv: "",
+      hbv: "",
+      cancer_history: "",
+      afp: "",
+      ALT: "",
+      AST: "",
+      ALP: "",
+      BIL: "",
+      GGT: "",
+      Albumin: "",
+      doctor_note: ""
+    };
+  };
 
-    name: "",
-    surname: "",
-    Yas: "",
-    gender: "",
-    alcohol: "",
-    smoking: "",
-    hcv: "",
-    hbv: "",
-    cancer_history: "",
-    afp: "",
-    ALT: "",
-    AST: "",
-    ALP: "",
-    BIL: "",
-    GGT: "",
-    Albumin: "",
-    doctor_note: ""
-  }};
-
-  // 2. useState'i fonksiyonu referans olarak vererek çağır
   const [form, setForm] = useState(getInitialForm);
+  const [btFile, setBtFile] = useState(null);
+  const [ultrasonFile, setUltrasonFile] = useState(null);
+  const [btImageUrl, setBtImageUrl] = useState(null);
+  const [ultrasonImageUrl, setUltrasonImageUrl] = useState(null);
 
-    // 3. Değişiklikleri localStorage'a kaydet
   useEffect(() => {
     localStorage.setItem("hastaFormData", JSON.stringify(form));
   }, [form]);
-
 
   useEffect(() => {
     const userId = localStorage.getItem('user_id');
@@ -47,11 +47,6 @@ const InputPage = () => {
       navigate('/');
     }
   }, [navigate]);
-
-  const [btFile, setBtFile] = useState(null);
-  const [ultrasonFile, setUltrasonFile] = useState(null);
-  const [btImageUrl, setBtImageUrl] = useState(null);
-  const [ultrasonImageUrl, setUltrasonImageUrl] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -63,19 +58,19 @@ const InputPage = () => {
     if (file) {
       const fileName = file.name.toLowerCase();
       const is3DFile = fileName.endsWith(".nii") || fileName.endsWith(".nii.gz") || fileName.endsWith(".dcm");
-      let previewValue = is3DFile ? file.name : URL.createObjectURL(file);
+      const previewUrl = is3DFile ? file.name : URL.createObjectURL(file);
       if (type === "bt") {
         setBtFile(file);
-        setBtImageUrl(previewValue);
-      } else if (type === "ultrason") {
+        setBtImageUrl(previewUrl);
+      } else {
         setUltrasonFile(file);
-        setUltrasonImageUrl(previewValue);
+        setUltrasonImageUrl(previewUrl);
       }
     } else {
       if (type === "bt") {
         setBtFile(null);
         setBtImageUrl(null);
-      } else if (type === "ultrason") {
+      } else {
         setUltrasonFile(null);
         setUltrasonImageUrl(null);
       }
@@ -91,11 +86,11 @@ const InputPage = () => {
     }
 
     if (!form.name || !form.surname || !form.Yas || !form.gender) {
-      alert("Lütfen hasta bilgilerini (Ad, Soyad, Yaş, Cinsiyet) eksiksiz doldurun.");
+      alert("Lütfen hasta bilgilerini eksiksiz doldurun.");
       return;
     }
 
-    const labDataForApi = {
+    const labData = {
       Yaş: parseFloat(form.Yas),
       Cinsiyet: form.gender === "Erkek" ? 1 : 0,
       Albumin: parseFloat(form.Albumin || 0),
@@ -106,76 +101,101 @@ const InputPage = () => {
       GGT: parseFloat(form.GGT || 0),
     };
 
-    const formData = new FormData();
-    formData.append("user_id", userId);
-    formData.append("patient_name", form.name);
-    formData.append("patient_surname", form.surname);
-    formData.append("lab_data", JSON.stringify(labDataForApi));
-    if (ultrasonFile) formData.append("usg_file", ultrasonFile);
-    if (btFile) formData.append("mri_file", btFile);
-    formData.append("afp_value", parseFloat(form.afp || 0));
-    formData.append("alcohol_consumption", form.alcohol || "");
-    formData.append("smoking_status", form.smoking || "");
-    formData.append("hcv_status", form.hcv || "");
-    formData.append("hbv_status", form.hbv || "");
-    formData.append("cancer_history_status", form.cancer_history || "");
+    const payload = new FormData();
+    payload.append("user_id", userId);
+    payload.append("patient_name", form.name);
+    payload.append("patient_surname", form.surname);
+    payload.append("lab_data", JSON.stringify(labData));
+    payload.append("afp_value", parseFloat(form.afp || 0));
+    payload.append("alcohol_consumption", form.alcohol || "");
+    payload.append("smoking_status", form.smoking || "");
+    payload.append("hcv_status", form.hcv || "");
+    payload.append("hbv_status", form.hbv || "");
+    payload.append("cancer_history_status", form.cancer_history || "");
+    if (ultrasonFile) payload.append("usg_file", ultrasonFile);
+    if (btFile) payload.append("mri_file", btFile);
 
     try {
       const response = await fetch("http://localhost:8000/evaluate_hcc_risk", {
         method: "POST",
-        body: formData,
+        body: payload,
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(`API Hatası: ${errorData.detail || 'Bilinmeyen hata'}`);
+        throw new Error(errorData.detail || "Sunucu hatası");
       }
 
       const result = await response.json();
-      console.log("API Yanıtı:", result);
+      const receivedVlmReport = result.vlm_radiology_report || null;
 
-      const rawPatientData = { ...form, age: form.Yas, ultrasonFileUploaded: !!ultrasonFile, btFileUploaded: !!btFile, ultrasonImageUrl, btImageUrl };
       navigate("/sonuc", {
         state: {
           hastaAdiSoyadi: `${form.name} ${form.surname}`,
           apiResult: result,
-          patientDetails: rawPatientData
+          vlmReport: receivedVlmReport,
+          patientDetails: {
+            ...form,
+            age: form.Yas,
+            ultrasonFileUploaded: !!ultrasonFile,
+            btFileUploaded: !!btFile,
+            ultrasonImageUrl,
+            btImageUrl,
+          },
         },
       });
-
     } catch (error) {
-      console.error("Tahmin alınırken hata oluştu:", error);
-      alert(`Tahmin yapılırken bir hata oluştu: ${error.message}.`);
+      console.error("Hesaplama hatası:", error);
+      alert("Hesaplama sırasında hata oluştu: " + error.message);
     }
   };
 
   return (
-    <div className="input-page">
-      <div className="nav-buttons-inside">
-        <button className="nav-btn" onClick={() => navigate(-1)}>
-          <FaArrowLeft className="nav-icon" />
-        </button>
-        <button className="nav-btn" onClick={() => navigate(+1)}>
-          <FaArrowRight className="nav-icon" />
-        </button>
-      </div>
+  <div className="input-page">
+    <div className="nav-buttons-inside">
+
+      {/* Geri Butonu */}
+      <button className="nav-btn" onClick={() => navigate("/")}>
+        <FaArrowLeft className="nav-icon" />
+      </button>
+
+      {/* İleri Butonu */}
+      <button
+        className="nav-btn"
+        onClick={() => {
+          const apiResult = sessionStorage.getItem("apiResult");
+          const vlmReport = sessionStorage.getItem("vlmReport");
+          const patientDetails = sessionStorage.getItem("patientDetails");
+
+          if (apiResult && vlmReport && patientDetails) {
+            navigate("/sonuc");
+          } else {
+            alert("Henüz hesaplama yapılmadı. Lütfen önce 'Hesapla' butonuna basın.");
+          }
+        }}
+      >
+        <FaArrowRight className="nav-icon" />
+      </button>
+
+    </div>
+
+
       <h2>Hasta Bilgileri ve Laboratuvar Verileri</h2>
 
       <div className="left-section">
         <h3>Hasta Bilgileri</h3>
         <div className="hasta-grid-2col">
-          <div className="form-group">
-            <label>Hasta Adı</label>
-            <input type="text" name="name" placeholder="Örn., Ayşe" value={form.name} onChange={handleChange} className={`form-control ${form.name ? "input-filled" : ""}`} />
-          </div>
-          <div className="form-group">
-            <label>Hasta Soyadı</label>
-            <input type="text" name="surname" placeholder="Örn., Yılmaz" value={form.surname} onChange={handleChange} className={`form-control ${form.surname ? "input-filled" : ""}`} />
-          </div>
-          <div className="form-group">
-            <label>Hasta Yaşı</label>
-            <input type="text" name="Yas" placeholder="Örn., 45" value={form.Yas} onChange={handleChange} className={`form-control ${form.Yas ? "input-filled" : ""}`} />
-          </div>
+          {[
+            { name: "name", label: "Ad", placeholder: "Örn., Ayşe" },
+            { name: "surname", label: "Soyad", placeholder: "Örn., Yılmaz" },
+            { name: "Yas", label: "Yaş", placeholder: "Örn., 45" },
+          ].map(({ name, label, placeholder }) => (
+            <div className="form-group" key={name}>
+              <label>{label}</label>
+              <input type="text" name={name} value={form[name]} placeholder={placeholder} onChange={handleChange} className={`form-control ${form[name] ? "input-filled" : ""}`} />
+            </div>
+          ))}
+
           <div className="form-group">
             <label>Cinsiyet</label>
             <select name="gender" value={form.gender} onChange={handleChange} className={`form-control ${form.gender ? "input-filled" : ""}`}>
@@ -184,38 +204,23 @@ const InputPage = () => {
               <option value="Erkek">Erkek</option>
             </select>
           </div>
-          <div className="form-group">
-            <label>Alkol Tüketimi</label>
-            <select name="alcohol" value={form.alcohol} onChange={handleChange} className={`form-control ${form.alcohol ? "input-filled" : ""}`}>
-              <option value="">Seçiniz</option>
-              <option value="Evet">Evet</option>
-              <option value="Hayır">Hayır</option>
-            </select>
-          </div>
-          <div className="form-group">
-            <label>Sigara Kullanımı</label>
-            <select name="smoking" value={form.smoking} onChange={handleChange} className={`form-control ${form.smoking ? "input-filled" : ""}`}>
-              <option value="">Seçiniz</option>
-              <option value="Evet">Evet</option>
-              <option value="Hayır">Hayır</option>
-            </select>
-          </div>
-          <div className="form-group">
-            <label>HCV (Hepatit C)</label>
-            <select name="hcv" value={form.hcv} onChange={handleChange} className={`form-control ${form.hcv ? "input-filled" : ""}`}>
-              <option value="">Seçiniz</option>
-              <option value="Evet">Evet</option>
-              <option value="Hayır">Hayır</option>
-            </select>
-          </div>
-          <div className="form-group">
-            <label>HBV (Hepatit B)</label>
-            <select name="hbv" value={form.hbv} onChange={handleChange} className={`form-control ${form.hbv ? "input-filled" : ""}`}>
-              <option value="">Seçiniz</option>
-              <option value="Evet">Evet</option>
-              <option value="Hayır">Hayır</option>
-            </select>
-          </div>
+
+          {["alcohol", "smoking", "hcv", "hbv"].map((key) => (
+            <div className="form-group" key={key}>
+              <label>{{
+                alcohol: "Alkol Tüketimi",
+                smoking: "Sigara Kullanımı",
+                hcv: "HCV (Hepatit C)",
+                hbv: "HBV (Hepatit B)"
+              }[key]}</label>
+              <select name={key} value={form[key]} onChange={handleChange} className={`form-control ${form[key] ? "input-filled" : ""}`}>
+                <option value="">Seçiniz</option>
+                <option value="Evet">Evet</option>
+                <option value="Hayır">Hayır</option>
+              </select>
+            </div>
+          ))}
+
           <div className="form-group">
             <label>Ailede Kanser Öyküsü</label>
             <select name="cancer_history" value={form.cancer_history} onChange={handleChange} className={`form-control ${form.cancer_history ? "input-filled" : ""}`}>
@@ -227,54 +232,42 @@ const InputPage = () => {
         </div>
       </div>
 
-      <div className="right-section" style={{ marginTop: "40px" }}>
+      {/* Laboratuvar verileri */}
+      <div className="right-section">
         <h3>Laboratuvar Sonuçları</h3>
         <div className="lab-grid">
-          <div className="lab-item"><label>AFP</label><input type="text" name="afp" placeholder="Örn., 5.2 ng/mL" value={form.afp} onChange={handleChange} className={`form-control ${form.afp ? "input-filled" : ""}`} /></div>
-          <div className="lab-item"><label>ALT</label><input type="text" name="ALT" placeholder="Örn., 25 U/L" value={form.ALT} onChange={handleChange} className={`form-control ${form.ALT ? "input-filled" : ""}`} /></div>
-          <div className="lab-item"><label>AST</label><input type="text" name="AST" placeholder="Örn., 30 U/L" value={form.AST} onChange={handleChange} className={`form-control ${form.AST ? "input-filled" : ""}`} /></div>
-          <div className="lab-item"><label>ALP</label><input type="text" name="ALP" placeholder="Örn., 120 U/L" value={form.ALP} onChange={handleChange} className={`form-control ${form.ALP ? "input-filled" : ""}`} /></div>
-          <div className="lab-item"><label>GGT</label><input type="text" name="GGT" placeholder="Örn., 40 U/L" value={form.GGT} onChange={handleChange} className={`form-control ${form.GGT ? "input-filled" : ""}`} /></div>
-          <div className="lab-item"><label>BIL</label><input type="text" name="BIL" placeholder="Örn., 0.8 mg/dL" value={form.BIL} onChange={handleChange} className={`form-control ${form.BIL ? "input-filled" : ""}`} /></div>
-          <div className="lab-item"><label>Albumin</label><input type="text" name="Albumin" placeholder="Örn., 4.2 g/dL" value={form.Albumin} onChange={handleChange} className={`form-control ${form.Albumin ? "input-filled" : ""}`} /></div>
-
+          {["afp", "ALT", "AST", "ALP", "GGT", "BIL", "Albumin"].map((key, i) => (
+            <div className="lab-item" key={i}>
+              <label>{key}</label>
+              <input type="text" name={key} value={form[key]} onChange={handleChange} className={`form-control ${form[key] ? "input-filled" : ""}`} />
+            </div>
+          ))}
         </div>
       </div>
 
-
-      <div className="image-section-wrapper" style={{ marginTop: "40px" }}>
-        <div className="bt-section">
-          <h3>Ultrason Görüntüsü Yükleme</h3>
-          <label htmlFor="ultrason-upload" className="upload-area">
-            {ultrasonImageUrl ? (
-              ultrasonFile && (ultrasonFile.name.toLowerCase().endsWith(".nii") || ultrasonFile.name.toLowerCase().endsWith(".nii.gz") || ultrasonFile.name.toLowerCase().endsWith(".dcm")) ? (
-                <p>Yüklü: {ultrasonImageUrl}</p>
+      {/* Görüntü Yükleme */}
+      <div className="image-section-wrapper">
+        {[
+          { label: "Ultrason", file: ultrasonFile, url: ultrasonImageUrl, type: "ultrason" },
+          { label: "MR", file: btFile, url: btImageUrl, type: "bt" },
+        ].map(({ label, file, url, type }, i) => (
+          <div className="bt-section" key={i}>
+            <h3>{label} Görüntüsü Yükleme</h3>
+            <label htmlFor={`${type}-upload`} className="upload-area">
+              {url ? (
+                file.name.toLowerCase().match(/\.(nii|nii.gz|dcm)$/)
+                  ? <p>Yüklü: {url}</p>
+                  : <img src={url} alt={`${label} Önizleme`} />
               ) : (
-                <img src={ultrasonImageUrl} alt="Ultrason Önizlemesi" />
-              )
-            ) : (
-              <div><strong>Ultrason Görüntüsü Yükle</strong><small>Sürükleyin veya gözatın</small></div>
-            )}
-          </label>
-          <input type="file" id="ultrason-upload" name="usg_file" accept="image/*,.nii,.nii.gz,.dcm" onChange={(e) => handleFileChange(e, "ultrason")} style={{ display: "none" }} />
-        </div>
-        <div className="bt-section">
-          <h3>MR Görüntüsü Yükleme</h3>
-          <label htmlFor="bt-upload" className="upload-area">
-            {btImageUrl ? (
-              btFile && (btFile.name.toLowerCase().endsWith(".nii") || btFile.name.toLowerCase().endsWith(".nii.gz") || btFile.name.toLowerCase().endsWith(".dcm")) ? (
-                <p>Yüklü: {btImageUrl}</p>
-              ) : (
-                <img src={btImageUrl} alt="MR Önizlemesi" />
-              )
-            ) : (
-              <div><strong>MR Görüntüsü Yükle</strong><small>Sürükleyin veya gözatın</small></div>
-            )}
-          </label>
-          <input type="file" id="bt-upload" name="mri_file" accept=".nii,.nii.gz,.dcm,image/*" onChange={(e) => handleFileChange(e, "bt")} style={{ display: "none" }} />
-        </div>
+                <div><strong>{label} Görüntüsü Yükle</strong><small>Sürükleyin veya gözatın</small></div>
+              )}
+            </label>
+            <input type="file" id={`${type}-upload`} accept=".nii,.nii.gz,.dcm,image/*" style={{ display: "none" }} onChange={(e) => handleFileChange(e, type)} />
+          </div>
+        ))}
       </div>
 
+      {/* Doktor notu */}
       <div className="doktor-note-kart">
         <h3><FaUserMd /> Doktorun Notu</h3>
         <textarea
@@ -286,10 +279,9 @@ const InputPage = () => {
         />
       </div>
 
-      <div className="button-container" style={{ marginTop: "40px" }}>
-        <button className="calculate-btn" onClick={handleCalculate}>
-          Hesapla
-        </button>
+      {/* Buton */}
+      <div className="button-container">
+        <button className="calculate-btn" onClick={handleCalculate}>Hesapla</button>
       </div>
     </div>
   );
