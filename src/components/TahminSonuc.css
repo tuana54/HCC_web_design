@@ -1,4 +1,4 @@
-/* src/components/TahminSonuc.css (Temizlenmiş ve Düzenlenmiş Hali) */
+/* src/components/TahminSonuc.css (GÜNCEL VERSİYON - Yapı Korundu) */
 
 .tahmin-container {
   max-width: 1280px;
@@ -27,6 +27,7 @@
   position: relative;
 }
 
+/* Kart başlıkları için yeni stil (sizin kayan başlıklarınız) */
 .kart h3 {
   font-size: 20px;
   font-weight: bold;
@@ -41,6 +42,7 @@
   background: white;
   padding: 0 8px;
   z-index: 2;
+  
 }
 
 .kart p {
@@ -69,17 +71,21 @@
 .risk-kart {
   padding: 20px 20px 10px 20px;
   min-height: auto;
+  background-color: white;
 }
 
+/* Risk Kutusu */
 .risk-kart .risk-kutusu {
   margin-top: 4px;
   margin-left: 0;
   font-size: 15px;
   display: inline-block;
+  background-color: white;
   padding-left: 0;
 }
 
 .risk-kutusu {
+  background-color: white;
   color: #b91c1c;
   padding: 6px 12px;
   border-radius: 8px;
@@ -93,7 +99,7 @@
   color: #155724;
 }
 
-.risk-kutusu.risk-orta {
+risk-kutusu.risk-orta {
   background-color: #fff3cd;
   color: #856404;
 }
@@ -102,11 +108,10 @@
   background-color: #f8d7da;
   color: #721c24;
 }
-
 .risk-kart .risk-icerik {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: flex-start; /* sola yasla */
   margin-top: 12px;
 }
 
@@ -117,9 +122,10 @@
   font-style: italic;
 }
 
+/* Yeni MRI uyarı stili */
 .mri-uyari {
-    background-color: #e0f2fe;
-    color: #0d47a1;
+    background-color: #e0f2fe; /* Açık mavi */
+    color: #0d47a1; /* Koyu mavi */
     padding: 8px 15px;
     border-radius: 8px;
     font-weight: bold;
@@ -130,31 +136,56 @@
     border-left: 5px solid #2196f3;
 }
 
+/* LLM Kartı ve İçeriği (Sizin stillerinizle birleştirildi) */
 .llm-kart {
-  border-left-color: #6366f1;
+  position: relative;
+  background-color: white; /* Beyaz arka plan */
+  border-left: 6px solid #6366f1; /* Mavi-mor kenarlık */
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
 .llm-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 15px;
+  margin-bottom: 15px; /* Sizin belirlediğiniz boşluk */
 }
 
 .llm-header h3 {
-  font-size: 22px;
-  position: static;
-  background: transparent;
-  box-shadow: none;
+  font-size: 22px; /* Sizin belirlediğiniz boyut */
+  font-weight: bold;
+  color: #1e3a8a; /* Sizin belirlediğiniz renk */
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  /* Kayan başlık stili burada tekrar uygulanmamalı, .kart h3 zaten apply ediyor */
+  position: static; /* Kayan başlık davranışını kaldır */
+  background: transparent; /* Arka planı şeffaf yap */
+  box-shadow: none; /* Gölgeyi kaldır */
 }
 
+/* LLM yanıtının her paragrafı için */
 .llm-yanit {
-    white-space: pre-wrap;
-    margin-bottom: 10px;
+    white-space: pre-wrap; /* Satır sonlarını korur ve boşlukları korur */
+    margin-bottom: 10px; /* Her paragraf arası boşluk */
     line-height: 1.6;
     font-size: 15px;
     color: #1f2937;
     text-align: left;
+}
+
+.llm-icerik-gorunum {
+    /* Bu bir görünüm alanı, tüm içeriği gösteriyorsa overflow hidden olmamalı */
+    padding: 15px;
+    border-radius: 8px;
+    background-color: #f8faff;
+    border: 1px solid #e0e7ff;
+    overflow: visible; /* İçeriğin tamamı görünür olsun */
+    max-height: none; /* Yükseklik sınırını kaldır */
 }
 
 .final-oneriler {
@@ -172,33 +203,35 @@
   box-shadow: 0 2px 5px rgba(0,0,0,0.08);
 }
 
+.final-oneriler .svg-inline--fa {
+    min-width: 24px;
+    text-align: center;
+}
+
+/* Yeni USG ve MRI Görüntü Analizi Kartları için */
 .image-analysis-section {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr; /* İki sütun */
     gap: 20px;
     margin-top: 40px;
 }
 
 .image-kart {
-    display: flex; /* İkon ve başlığı yan yana getirmek için */
-    flex-direction: column;
+    flex-direction: column; /* İçeriği dikey sırala */
     align-items: center;
-    border-left-color: #28a745;
-    padding-top: 40px;
+    border-left-color: #28a745; /* Yeşil kenarlık */
+    padding-top: 40px; /* Başlık için boşluk */
 }
-
 .image-kart .ikon {
     color: #28a745;
     margin-bottom: 10px;
 }
-
 .image-kart h3 {
-    color: #28a745;
+    color: #28a745; /* Görüntü başlık rengi */
 }
-
 .loaded-image-preview {
     max-width: 100%;
-    max-height: 200px;
+    max-height: 200px; /* Önizleme yüksekliğini sınırla */
     object-fit: contain;
     border-radius: 8px;
     margin-top: 10px;
@@ -209,9 +242,10 @@
     color: #555;
     margin-top: 10px;
     text-align: center;
-    width: 100%;
+    width: 100%; /* Metnin tamamına yayılması için */
 }
 
+/* Geri Git butonu stili */
 .geri-icon {
     position: absolute;
     top: 20px;
@@ -227,6 +261,7 @@
     transform: scale(1.1);
 }
 
+/* Yeni Bir Tahmin Yap butonu için stil */
 .button-container {
   text-align: center;
   margin-top: 30px;
@@ -248,20 +283,27 @@
   background-color: #1e40af;
   transform: scale(1.05);
 }
-
-.llm-yapay-kapsayici {
-  display: flex;
-  justify-content: flex-start;
-  margin-top: 20px;
+.doktor-textarea {
+  width: 97%;
+  min-height: 130px;
+  font-size: 16px;
+  padding: 12px;
+  resize: vertical;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  background-color: #f9fafb;
+  display: block;
+  margin-left: 0;             /* Sola yaslı */
+  margin-right: auto;         /* Sağdan boşluk bırak */
 }
-
 .llm-yatay-alan {
   display: flex;
-  width: 100%;
   align-items: center;
   gap: 20px;
+  flex-wrap: wrap;
+  justify-content: flex-start;
 }
-
 .doktor-select {
   padding: 12px 16px;
   font-size: 1rem;
@@ -269,12 +311,7 @@
   border: 1px solid #ccc;
   width: 200px;
   height: 52px;
-  cursor: pointer;
-  transition: box-shadow 0.2s ease-in-out;
-}
-
-.doktor-select:hover {
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+   cursor: pointer; 
 }
 
 .doktor-ozet-kutu {
@@ -283,6 +320,8 @@
   padding: 12px 16px;
   border-left: 4px solid #4a90e2;
   border-radius: 8px;
+  min-width: 400px;
+  max-width: 500px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   transition: all 0.3s ease;
   font-size: 1rem;
@@ -290,29 +329,41 @@
   height: 52px;
   display: flex;
   align-items: center;
-  flex-grow: 1;
 }
+
 
 .doktor-ozet-kutu:hover {
   background-color: #e4ecff;
 }
+.llm-yapay-kapsayici {
+  display: flex;
+  justify-content: flex-start;  /* sola yaslı */
+  margin-left: 80px;            /* sağa doğru kaydırır */
+  margin-top: 20px;
+}
+.doktor-select:hover {
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2); /* Gölgelendirme efekti */
+  transition: box-shadow 0.2s ease-in-out;
+}
+.doktor-yorum-kapsayici {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.doktor-yorum-satiri {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+
 
 .doktor-yorum-wrapper {
   position: relative;
-}
-
-.doktor-textarea {
-  width: 100%;
-  box-sizing: border-box; /* padding'i genişliğe dahil eder */
-  min-height: 130px;
-  font-size: 16px;
-  padding: 12px;
-  padding-right: 60px; /* Butonla çakışmasın diye sağ boşluk */
-  resize: vertical;
-  border: 1px solid #ccc;
+  padding-bottom: 60px; /* ✴️ Butonun sarkmasını engeller */
   border-radius: 8px;
-  background-color: #f9fafb;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  overflow: hidden;
 }
 
 .ikon-gonder-btn {
@@ -335,6 +386,80 @@
   transform: scale(1.1);
 }
 
+.doktor-textarea {
+  width: 100%;
+  min-height: 130px;
+  font-size: 16px;
+  padding: 12px;
+  padding-right: 60px; /* Butonla çakışmasın diye sağ boşluk */
+  resize: vertical;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9fafb;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+.usg-goruntu-kart {
+  display: flex;
+  flex-direction: column;
+  border-left: 6px solid #3b82f6;
+  padding: 20px;
+  border-radius: 12px;
+  background-color: white;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  margin-bottom: 24px;
+}
+
+.usg-icerik-iki-kolon {
+  display: flex;
+  gap: 24px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.usg-goruntu {
+  flex: 1;
+  min-width: 250px;
+  max-width: 350px;
+}
+
+.usg-image-preview {
+  width: 100%;
+  max-height: 240px;
+  object-fit: contain;
+  border: 1px dashed #999;
+  border-radius: 8px;
+  padding: 4px;
+}
+
+.usg-image-placeholder {
+  width: 100%;
+  height: 200px;
+  border: 1px dashed #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+  font-style: italic;
+  border-radius: 8px;
+  background-color: #f9fafb;
+}
+
+.usg-vlm-aciklama {
+  flex: 2;
+  background-color: #f0f4f8;
+  padding: 16px;
+  border-left: 4px solid #6366f1;
+  border-radius: 10px;
+  font-size: 15px;
+  color: #1e293b;
+  line-height: 1.6;
+  min-width: 300px;
+}
+
+.usg-placeholder {
+  font-style: italic;
+  color: #6b7280;
+}
 .guncel-usg-kart {
   padding: 30px;
   border-left: 6px solid #6366f1;
@@ -343,6 +468,94 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
+.usg-icerik-iki-kolon {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 30px;
+  align-items: flex-start;
+  margin-top: 20px;
+}
+
+.usg-goruntu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f9fafb;
+  border: 1px dashed #94a3b8;
+  border-radius: 12px;
+  padding: 16px;
+  min-height: 280px;
+}
+
+.usg-image-preview {
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  object-fit: contain;
+}
+
+.usg-image-placeholder {
+  color: #6b7280;
+  font-style: italic;
+  text-align: center;
+  font-size: 15px;
+}
+
+.vlm-yorum-kutusu {
+  background-color: #f8f9ff;
+  border: 1px solid #cbd5e1;
+  padding: 20px;
+  border-radius: 12px;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #1f2937;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+.usg-icerik-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  gap: 30px;
+  align-items: stretch;
+  margin-top: 20px;
+}
+
+.usg-goruntu-alani {
+  background-color: #f9fafb;
+  border: 1px dashed #94a3b8;
+  border-radius: 12px;
+  padding: 16px;
+  min-height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.usg-image-preview {
+  max-width: 100%;
+  max-height: 320px;
+  object-fit: contain;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.usg-image-placeholder {
+  font-style: italic;
+  color: #6b7280;
+  text-align: center;
+  font-size: 15px;
+}
+
+.vlm-yorum-alani {
+  background-color: #f0f4ff;
+  border-left: 6px solid #4a90e2;
+  padding: 20px;
+  border-radius: 12px;
+  font-size: 16px;
+  color: #1f2937;
+  line-height: 1.6;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
 .usg-icerik-grid {
   display: grid;
   grid-template-columns: 1fr 1.6fr;
@@ -351,8 +564,10 @@
   margin-top: 20px;
 }
 
+/* Sol: Görüntü alanı */
 .usg-goruntu-alani {
   background-color: #f9fafb;
+  border: none; /* DIŞ ÇERÇEVEYİ KALDIRDIK */
   border-radius: 12px;
   padding: 16px;
   min-height: 280px;
@@ -373,8 +588,10 @@
   color: #6b7280;
   text-align: center;
   font-size: 15px;
+  border: none;        /* İÇ ÇERÇEVE KALKTI */
 }
 
+/* Sağ: VLM Yorum alanı */
 .vlm-yorum-alani {
   background-color: #f8faff;
   padding: 20px;
@@ -383,6 +600,7 @@
   color: #1f2937;
   line-height: 1.6;
   min-height: 150px;
-  border: 2px solid #3b82f6;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+  border: 2px solid #3b82f6; /* Belirgin MAVİ kenarlık */
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2); /* Hafif mavi gölge */
 }
+
