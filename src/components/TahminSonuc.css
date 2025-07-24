@@ -1,13 +1,14 @@
 /* src/components/TahminSonuc.css (GÜNCEL VERSİYON - Yapı Korundu) */
 
 .tahmin-container {
+  position: relative;
   max-width: 1280px;
-  margin: 40px auto;
-  padding: 30px;
-  font-family: 'Segoe UI', sans-serif;
-  background-color: #f0f4f8;
+  margin: 30px auto;
+  padding: 40px;
+  font-family: "Segoe UI", sans-serif;
+  background-color: #f0f4f8;  /* sayfanın arka planı*/
   border-radius: 16px;
-  box-shadow: 0 0 14px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 }
 .baslik {
   text-align: center;
@@ -23,8 +24,12 @@
   padding: 24px 20px;
   border-radius: 12px;
   margin-bottom: 24px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  transition: all 0.3s ease-in-out;
   position: relative;
+}
+.kart:hover {
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
 }
 
 /* Kart başlıkları için yeni stil (sizin kayan başlıklarınız) */
@@ -32,16 +37,13 @@
   font-size: 20px;
   font-weight: bold;
   color: #1e3a8a;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 6px;
   margin-bottom: 12px;
   display: flex;
   align-items: center;
   gap: 10px;
-  position: absolute;
-  top: -20px;
-  left: 16px;
-  background: white;
-  padding: 0 8px;
-  z-index: 2;
+  
   
 }
 
@@ -84,15 +86,22 @@
   padding-left: 0;
 }
 
-.risk-kutusu {
-  background-color: white;
-  color: #b91c1c;
-  padding: 6px 12px;
-  border-radius: 8px;
+.risk-kutusu.risk-dusuk {
+  background-color: #d4edda;
+  color: #155724;
   font-weight: bold;
-  display: inline-block;
-  margin-left: 0;
+  border-radius: 8px;
+
+  display: inline-block;    /* Flex değil, inline tutalım */
+  padding: 4px 10px;        /* Kutu kalınlaşmasın */
+  line-height: 1.8;         /* 🔥 Yazıyı aşağı kaydırır */
+
+  vertical-align: middle;   /* Diğer öğelere hizalama */
+  height: 28px;             /* Sabit yükseklik (dilersen kaldırabilirsin) */
 }
+
+
+
 
 .risk-kutusu.risk-dusuk {
   background-color: #d4edda;
@@ -116,11 +125,13 @@ risk-kutusu.risk-orta {
 }
 
 .risk-not {
-  font-size: 14px;
-  margin-top: 10px;
-  color: #374151;
   font-style: italic;
+  font-size: 14px;
+  margin-top: 8px;
+  color: #444;
+  padding-left: 10px;
 }
+
 
 /* Yeni MRI uyarı stili */
 .mri-uyari {
@@ -154,19 +165,6 @@ risk-kutusu.risk-orta {
   margin-bottom: 15px; /* Sizin belirlediğiniz boşluk */
 }
 
-.llm-header h3 {
-  font-size: 22px; /* Sizin belirlediğiniz boyut */
-  font-weight: bold;
-  color: #1e3a8a; /* Sizin belirlediğiniz renk */
-  margin: 0;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  /* Kayan başlık stili burada tekrar uygulanmamalı, .kart h3 zaten apply ediyor */
-  position: static; /* Kayan başlık davranışını kaldır */
-  background: transparent; /* Arka planı şeffaf yap */
-  box-shadow: none; /* Gölgeyi kaldır */
-}
 
 /* LLM yanıtının her paragrafı için */
 .llm-yanit {
@@ -186,6 +184,13 @@ risk-kutusu.risk-orta {
     border: 1px solid #e0e7ff;
     overflow: visible; /* İçeriğin tamamı görünür olsun */
     max-height: none; /* Yükseklik sınırını kaldır */
+}
+.llm-doktor-aciklama {
+  background-color: #f5f7fb;
+  border-left: 4px solid #0088cc;
+  padding: 10px;
+  border-radius: 6px;
+  margin-top: 8px;
 }
 
 .final-oneriler {
@@ -266,6 +271,34 @@ risk-kutusu.risk-orta {
   text-align: center;
   margin-top: 30px;
 }
+.nav-buttons-inside {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(-50%, -50%);  /* tam köşeye oturtur */
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+}
+
+.nav-btn {
+  background-color:  #1e3a8a;
+  border: none;
+  border-radius: 50%;
+  padding: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.nav-btn:hover {
+  transform: scale(1.1);
+}
+
+.nav-icon {
+  font-size: 20px;
+  color: #1e3a8a;
+}
 
 .calculate-btn {
   padding: 12px 28px;
@@ -283,6 +316,18 @@ risk-kutusu.risk-orta {
   background-color: #1e40af;
   transform: scale(1.05);
 }
+
+.doktor-yorum-kapsayici h3 {
+  position: relative;
+  display: inline-block;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 6px;
+  margin-bottom: 18px; /* ALT BOŞLUK */
+  background-color: white;
+  padding-left: 6px;
+  padding-right: 6px;
+}
+
 .doktor-textarea {
   width: 97%;
   min-height: 130px;
@@ -360,11 +405,12 @@ risk-kutusu.risk-orta {
 
 
 .doktor-yorum-wrapper {
-  position: relative;
-  padding-bottom: 60px; /* ✴️ Butonun sarkmasını engeller */
-  border-radius: 8px;
-  overflow: hidden;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 20px; /* Yorum kutusunu aşağı iter */
 }
+
 
 .ikon-gonder-btn {
   position: absolute;
@@ -388,6 +434,7 @@ risk-kutusu.risk-orta {
 
 .doktor-textarea {
   width: 100%;
+   margin: 0 auto;
   min-height: 130px;
   font-size: 16px;
   padding: 12px;
@@ -603,4 +650,97 @@ risk-kutusu.risk-orta {
   border: 2px solid #3b82f6; /* Belirgin MAVİ kenarlık */
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2); /* Hafif mavi gölge */
 }
+/* Tüm kart başlıklarını eşitle */
+.kart h3,
+.llm-header h3,
+.image-kart h3,
+.usg-goruntu-kart h3,
+.guncel-usg-kart h3 {
 
+  font-size: 20px;
+  font-weight: bold;
+  color: #1e3a8a;
+  
+  display: inline-block; /* 🎯 Sadece yazı kadar yer kaplasın */
+  border-bottom: 2px solid #e0e0e0; /* Çizgi sadece metin kadar */
+  padding-bottom: 6px;
+  margin-bottom: 12px;
+
+  position: absolute;
+  top: -20px;
+  left: 16px;
+  background: white;
+  padding: 0 8px;
+  z-index: 2;
+}
+
+
+.kart,
+.llm-kart,
+.usg-goruntu-kart,
+.guncel-usg-kart {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.kart .kart-baslik,
+.llm-kart .kart-baslik,
+.usg-goruntu-kart .kart-baslik {
+  position: absolute;
+  top: -20px;
+  left: 16px;
+  background: white;
+  padding: 0 8px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #1e3a8a;
+  border-bottom: 2px solid #e0e0e0;
+  z-index: 2;
+}
+
+.yeni-hasta-buton {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #1e3a8a;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 56px;
+  height: 56px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+  position: fixed;
+}
+
+.yeni-hasta-buton:hover {
+  background-color: #003087;
+}
+
+/* Tooltip yazısı */
+.yeni-hasta-tooltip {
+  position: absolute;
+  top: 60px;
+  right: 50%;
+  transform: translateX(50%);
+  background-color: rgba(30, 58, 138, 0.75); /* şeffaf lacivert */
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Hover anında göster */
+.yeni-hasta-buton:hover .yeni-hasta-tooltip {
+  opacity: 1;
+}

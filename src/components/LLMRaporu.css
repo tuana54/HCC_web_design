@@ -1,88 +1,153 @@
+/* Genel Rapor Konteyneri */
 .llm-rapor-container {
-  max-width: 800px;
-  margin: 40px auto;
-  padding: 20px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  border: 3px solid #111; /* Ana dış çerçeve */
-  border-radius: 10px;
-  background-color: #ffffff;
-  color: #333;
+  font-family: 'Times New Roman', serif; /* Times New Roman */
+  color: black; /* Siyah renk */
+  background-color: #ffffff; /* Beyaz arkaplan */
+  padding: 30px; /* İç boşluk */
+  border-radius: 12px; /* Köşe yuvarlama */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Hafif gölge */
+  max-width: 800px; /* Rapor genişliğini sabitle */
+  margin: 30px auto; /* Sayfada ortala ve üstten boşluk bırak */
+  min-height: 400px; /* Minimum yükseklik */
+  display: flex;
+  flex-direction: column;
+  position: relative; /* Butonun relative olarak bu konteynere göre konumlanmasını sağlar */
 }
 
-.llm-rapor-container.error {
-    color: #d9534f;
-    text-align: center;
-    font-size: 1.2em;
-}
-
+/* Rapor Başlığı Konteyneri */
 .rapor-header {
-  text-align: center;
-  border: 2px solid #333;
-  padding: 15px;
-  margin-bottom: 15px;
-  border-radius: 5px;
+  text-align: center; /* Logo ve başlığı ortala */
+  margin-bottom: 25px; /* Başlık ile altındaki hasta bilgileri arasına boşluk */
+  border-bottom: 1px solid #eee; /* Başlık altına çizgi */
+  padding-bottom: 15px; /* Çizgi ile başlık arasına boşluk */
 }
 
+/* Rapor Başlığı Metni */
 .rapor-header h1 {
+  font-size: 30px; /* Başlık font boyutu */
+  color: black; /* Başlık metnini siyah yap */
   margin: 0;
-  font-size: 28px;
-  color: #1e3a8a;
+  text-transform: uppercase; /* Başlığı büyük harf yap */
+  letter-spacing: 1px; /* Harfler arasına boşluk */
 }
 
+/* Logo Stilleri */
+.rapor-logo {
+  max-width: 250px; /* Logonun maksimum genişliği */
+  height: auto; /* Oranını korur */
+  margin-bottom: 20px; /* Logo ile başlık arasına boşluk */
+  display: block; /* Logoyu blok element yapar, böylece margin: auto ile ortalanabilir */
+  margin-left: auto; /* Logoyu yatayda ortala */
+  margin-right: auto; /* Logoyu yatayda ortala */
+}
+
+/* Rapor İçeriği */
 .rapor-body {
-  border: 2px solid #333;
-  padding: 20px;
-  border-radius: 5px;
+  flex-grow: 1;
 }
 
+/* Hasta Bilgileri Bölümü Kapsayıcısı */
 .hasta-bilgileri {
-  margin-bottom: 25px;
   display: flex;
-  flex-direction: column;
-  gap: 10px;
+  flex-direction: column; /* Bilgileri alt alta sırala */
+  gap: 10px; /* Her bir bilgi satırı arasında dikey boşluk */
+  margin-bottom: 25px; /* Hasta bilgileri ile altındaki "Laboratuvar Analizi" kutusu arasına boşluk */
+  padding-left: 10px; /* Sol kenardan hafif içeride başlasın */
 }
 
+/* İlk satır (Hasta Adı Soyadı ve Risk) için özel flex konteyner */
+.info-row-first {
+    display: flex;
+    justify-content: space-between; /* Öğeler arasında mümkün olan en fazla boşluğu bırak */
+    align-items: baseline;
+    flex-wrap: wrap; /* Gerekirse alt satıra geçsin */
+}
+
+/* Her bir bilgi öğesi (örn: Hasta Adı Soyadı: ..., Yaş: ..., Cinsiyet: ...) */
 .info-item {
-  border: 1px solid #555;
-  padding: 10px;
-  border-radius: 4px;
+  display: flex; /* Etiket ve değeri yan yana getirir */
+  align-items: baseline; /* Metin taban çizgisini hizala */
+  font-size: 20px;
+  color: black; /* Metin rengi */
+  /* .info-row-first içindeki öğeler için width'i kaldırıyoruz, flex-grow halledecek */
+  /* margin-bottom'ı kaldırıyoruz, gap handle edecek */
 }
 
+/* Bilgi etiketleri (örn: "Yaş:", "Cinsiyet:") */
 .info-item strong {
-  margin-right: 8px;
-  color: #1e3a8a;
+  font-weight: normal; /* Etiketlerin kalınlığını normal yap */
+  min-width: 20px; /* Etiketler için sabit bir minimum genişlik, değerlerin hizalanmasını sağlar */
+  text-align: left; /* Etiketin kendi metni sola yaslı kalsın */
+  margin-right: 5px; /* Etiket ile değer arasına boşluk */
 }
 
-.info-row {
-  display: flex;
-  gap: 10px;
+/* Bilgi değerleri (örn: "78", "Erkek") */
+.info-item span {
+  flex-grow: 1; /* Değerin kalan alanı doldurmasını sağlar */
+  white-space: nowrap; /* Değerin tek satırda kalmasını sağlar */
+  text-align: left; /* Değeri sola yasla */
 }
 
-.info-row .info-item {
-  flex: 1;
+/* Bu sınıf artık sadece Yaş ve Cinsiyet gibi ayrı satırlardaki tek öğeler için */
+/* .info-item-full olarak değil, doğrudan .info-item olarak kullanılacak */
+/* Eğer hala bir yerde tam genişlik gerekiyorsa, eski kullanımlarını kaldırın. */
+/* Eski .info-row sınıfı da artık kullanılmıyor gibi */
+
+/* Risk Değeri 'Yüksek Risk' ise kalın punto */
+.risk-kalin {
+  font-weight: bold; /* Kalın yap */
+  color: black; /* Rengi siyah tut */
+  /* Önceden kırmızıydı, görseldeki gibi siyah yaptım */
 }
 
+/* LLM Sonuçları Kutusu (Laboratuvar Analizi kısmı) */
 .llm-sonuclari {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+  background-color: #f8f9fa; /* Hafif gri arkaplan */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05); /* Hafif gölge */
+  font-size: 20px; /* Görseldeki gibi daha büyük font */
+  line-height: 1.6;
+  text-align: left; /* Metni sola yasla */
+  color: black; /* Metin rengi */
 }
 
-.llm-kutu {
-  border: 2px solid #333;
-  padding: 15px;
-  min-height: 70px;
-  background-color: #f8faff;
-  border-radius: 4px;
-}
-
+/* Eğer LLM yanıtları boşsa gösterilen placeholder stilini koruyalım */
 .llm-kutu.empty {
-  color: #888;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  opacity: 0.6;
+  font-style: italic;
+  color: #666;
 }
 
-.llm-kutu p {
-  margin: 0;
+/* PDF İndirme Butonu Stili - Küçük ve İkonik */
+.download-pdf-button {
+  position: absolute; /* Butonu serbestçe konumlandırmak için */
+  top: 20px; /* Üst kenardan boşluk */
+  right: 20px; /* Sağ kenardan boşluk */
+  background-color: #007bff; /* Mavi buton rengi */
+  color: white; /* Beyaz ikon rengi */
+  width: 40px; /* Buton genişliği */
+  height: 40px; /* Buton yüksekliği */
+  border: none;
+  border-radius: 50%; /* Dairesel buton yapmak için */
+  display: flex; /* İkonu ortalamak için flexbox kullan */
+  justify-content: center; /* Yatayda ortala */
+  align-items: center; /* Dikeyde ortala */
+  cursor: pointer;
+  font-size: 20px; /* İkon boyutu */
+  z-index: 1000; /* Diğer elementlerin üzerinde görünmesini sağlar */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Yumuşak geçişler */
 }
+
+.download-pdf-button:hover {
+  background-color: #0056b3; /* Hover rengi */
+  transform: translateY(-2px); /* Hafif yukarı kalkma efekti */
+}
+
+.download-pdf-button:active {
+  transform: translateY(0); /* Tıklandığında eski haline dönme efekti */
+}
+
+/* RİSK BİLGİSİNİN ESKİ KONUMLANDIRMA STİLİ KALDIRILDI */
+/* .risk-display { ... } artık yok */

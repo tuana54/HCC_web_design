@@ -3,14 +3,21 @@ import React, { useState, useEffect } from "react";
 import "./TahminSonuc.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FaUserMd, FaRobot, FaStethoscope, FaFlask, FaLaptopMedical, FaImage, FaPaperPlane, FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import { FaUserPlus } from "react-icons/fa";
 import LLMModelComparison from "./LLMModelComparison";
 
 const TahminSonuc = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const handleYeniHasta = () => {
+    // Local verileri temizle (gerekirse)
+    localStorage.removeItem("formData");
+    navigate("/"); // InputPage'e yönlendir
+  };
+
   const [doktorYorumu, setDoktorYorumu] = useState(""); 
-  const [doctorSummary, setDoctorSummary] = useState("");
-  const [selectedDoctor, setSelectedDoctor] = useState("");
+  //const [doctorSummary, setDoctorSummary] = useState("");
+  //const [selectedDoctor, setSelectedDoctor] = useState("");
   const { hastaAdiSoyadi, apiResult, patientDetails } = location.state || {};
 
 
@@ -25,8 +32,8 @@ const TahminSonuc = () => {
   }
 
   const overallRisk = apiResult?.overall_risk_level || "Belirlenemedi";
-  const mriRecommendation = apiResult?.mri_recommendation || false;
-  const finalRecommendation = apiResult?.final_recommendation || "Detaylı öneri bulunamadı.";
+  //const mriRecommendation = apiResult?.mri_recommendation || false;
+  //const finalRecommendation = apiResult?.final_recommendation || "Detaylı öneri bulunamadı.";
   const detailedSummary = apiResult?.detailed_report_summary || ["Yapay zeka değerlendirmesi bekleniyor."];
 
   // API'den gelen detailedSummary bir dizi olduğu için, her bir maddeyi ayrı bir paragraf olarak render ediyoruz.
@@ -41,12 +48,44 @@ const TahminSonuc = () => {
   else if (overallRisk.includes("Yüksek Risk")) riskBoxClass += " risk-yuksek";
 
   // Lab değerleri için yardımcı fonksiyon (varsayılan değer ve birim ekler)
-  const getOrDefault = (value, unit = "") => {
-    return (value !== undefined && value !== null && value !== "") ? `${value} ${unit}` : "Belirtilmemiş";
-  };
+ // const getOrDefault = (value, unit = "") => {
+    //return (value !== undefined && value !== null && value !== "") ? `${value} ${unit}` : "Belirtilmemiş";
+  //};
+
+  // JSX return'ünün hemen üstü
+
+const veriListesi = [];
+
+if (patientDetails.age) veriListesi.push("yaş");
+if (patientDetails.gender) veriListesi.push("cinsiyet");
+if (patientDetails.afp) veriListesi.push("AFP");
+if (patientDetails.ALT) veriListesi.push("ALT");
+if (patientDetails.AST) veriListesi.push("AST");
+if (patientDetails.ALP) veriListesi.push("ALP");
+if (patientDetails.BIL) veriListesi.push("Bilirubin");
+if (patientDetails.GGT) veriListesi.push("GGT");
+if (patientDetails.Albumin) veriListesi.push("Albumin");
+
+if (patientDetails.ultrasonFileUploaded) veriListesi.push("Ultrason görüntüsü");
+if (patientDetails.btFileUploaded) veriListesi.push("MR görüntüsü");
+
+let riskNotu = "";
+
+if (veriListesi.length > 0) {
+  const son = veriListesi.pop();
+  riskNotu = `Not: Bu risk seviyesi ${veriListesi.length > 0 ? veriListesi.join(", ") + " ve " : ""}${son} verilerine göre hesaplanmıştır.`;
+} else {
+  riskNotu = "Not: Risk hesaplaması için yeterli veri sağlanmamıştır.";
+}
+
 
   return (
     <div className="tahmin-container" id="tahmin-container">
+      {/* Yeni Hasta Butonu */}
+      <button className="yeni-hasta-buton" onClick={handleYeniHasta}>
+  <FaUserPlus className="yeni-hasta-ikon" />
+  <span className="yeni-hasta-tooltip">Yeni Hasta Ekle</span>
+</button>
       <div className="nav-buttons-inside">
         <button className="nav-btn" onClick={() => navigate(-1)}>
           <FaArrowLeft className="nav-icon" />
@@ -68,15 +107,14 @@ const TahminSonuc = () => {
       </div>
 
       {/* GENEL HCC RİSK SEVİYESİ */}
-      <div className="kart risk-kart">
-        <h3 className="kart-baslik">Genel HCC Risk Seviyesi</h3>
-        <div className="risk-icerik">
-          <span className={riskBoxClass}>{overallRisk.replace(/ \(.*\)/, '')}</span> {/* Açıklamayı kaldır */}
-          <p className="risk-not">
-            Not: Bu risk seviyesi yaş, cinsiyet, AFP, ALT, AST gibi klinik ve laboratuvar parametreleri ile görüntüleme bulgularına göre hesaplanmıştır.
-          </p>
-        </div>
-      </div>
+<div className="kart risk-kart">
+  <h3 className="kart-baslik">Genel HCC Risk Seviyesi</h3>
+  <div className="risk-icerik">
+    <span className={riskBoxClass}>{overallRisk.replace(/ \(.*\)/, '')}</span>
+    <p className="risk-not">{riskNotu}</p>
+  </div>
+</div>
+
 
       {/* Yapay Zekâ Modelinin Detaylı Değerlendirmesi */}
       <div className="llm-kart">

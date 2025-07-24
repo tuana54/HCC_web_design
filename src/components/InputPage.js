@@ -6,7 +6,12 @@ import "./InputPage.css";
 
 const InputPage = () => {
   const navigate = useNavigate();
-  const [form, setForm] = useState({
+
+    // 1. localStorage'dan veri getiren fonksiyon (hook dışında tanımlanır)
+  const getInitialForm = () => {
+    const savedForm = localStorage.getItem("hastaFormData");
+    return savedForm ? JSON.parse(savedForm) : {
+
     name: "",
     surname: "",
     Yas: "",
@@ -23,9 +28,17 @@ const InputPage = () => {
     BIL: "",
     GGT: "",
     Albumin: "",
-    Albumin_and_Globulin_Ratio: "", // Eksik olan bu alan eklendi
     doctor_note: ""
-  });
+  }};
+
+  // 2. useState'i fonksiyonu referans olarak vererek çağır
+  const [form, setForm] = useState(getInitialForm);
+
+    // 3. Değişiklikleri localStorage'a kaydet
+  useEffect(() => {
+    localStorage.setItem("hastaFormData", JSON.stringify(form));
+  }, [form]);
+
 
   useEffect(() => {
     const userId = localStorage.getItem('user_id');
@@ -91,7 +104,6 @@ const InputPage = () => {
       AST: parseFloat(form.AST || 0),
       BIL: parseFloat(form.BIL || 0),
       GGT: parseFloat(form.GGT || 0),
-      Albumin_and_Globulin_Ratio: parseFloat(form.Albumin_and_Globulin_Ratio || 0),
     };
 
     const formData = new FormData();
@@ -154,19 +166,19 @@ const InputPage = () => {
         <div className="hasta-grid-2col">
           <div className="form-group">
             <label>Hasta Adı</label>
-            <input type="text" name="name" placeholder="Örn., Ayşe" value={form.name} onChange={handleChange} className="form-control" />
+            <input type="text" name="name" placeholder="Örn., Ayşe" value={form.name} onChange={handleChange} className={`form-control ${form.name ? "input-filled" : ""}`} />
           </div>
           <div className="form-group">
             <label>Hasta Soyadı</label>
-            <input type="text" name="surname" placeholder="Örn., Yılmaz" value={form.surname} onChange={handleChange} className="form-control" />
+            <input type="text" name="surname" placeholder="Örn., Yılmaz" value={form.surname} onChange={handleChange} className={`form-control ${form.surname ? "input-filled" : ""}`} />
           </div>
           <div className="form-group">
             <label>Hasta Yaşı</label>
-            <input type="text" name="Yas" placeholder="Örn., 45" value={form.Yas} onChange={handleChange} className="form-control" />
+            <input type="text" name="Yas" placeholder="Örn., 45" value={form.Yas} onChange={handleChange} className={`form-control ${form.Yas ? "input-filled" : ""}`} />
           </div>
           <div className="form-group">
             <label>Cinsiyet</label>
-            <select name="gender" value={form.gender} onChange={handleChange} className="form-control">
+            <select name="gender" value={form.gender} onChange={handleChange} className={`form-control ${form.gender ? "input-filled" : ""}`}>
               <option value="">Seçiniz</option>
               <option value="Kadın">Kadın</option>
               <option value="Erkek">Erkek</option>
@@ -174,7 +186,7 @@ const InputPage = () => {
           </div>
           <div className="form-group">
             <label>Alkol Tüketimi</label>
-            <select name="alcohol" value={form.alcohol} onChange={handleChange} className="form-control">
+            <select name="alcohol" value={form.alcohol} onChange={handleChange} className={`form-control ${form.alcohol ? "input-filled" : ""}`}>
               <option value="">Seçiniz</option>
               <option value="Evet">Evet</option>
               <option value="Hayır">Hayır</option>
@@ -182,7 +194,7 @@ const InputPage = () => {
           </div>
           <div className="form-group">
             <label>Sigara Kullanımı</label>
-            <select name="smoking" value={form.smoking} onChange={handleChange} className="form-control">
+            <select name="smoking" value={form.smoking} onChange={handleChange} className={`form-control ${form.smoking ? "input-filled" : ""}`}>
               <option value="">Seçiniz</option>
               <option value="Evet">Evet</option>
               <option value="Hayır">Hayır</option>
@@ -190,7 +202,7 @@ const InputPage = () => {
           </div>
           <div className="form-group">
             <label>HCV (Hepatit C)</label>
-            <select name="hcv" value={form.hcv} onChange={handleChange} className="form-control">
+            <select name="hcv" value={form.hcv} onChange={handleChange} className={`form-control ${form.hcv ? "input-filled" : ""}`}>
               <option value="">Seçiniz</option>
               <option value="Evet">Evet</option>
               <option value="Hayır">Hayır</option>
@@ -198,7 +210,7 @@ const InputPage = () => {
           </div>
           <div className="form-group">
             <label>HBV (Hepatit B)</label>
-            <select name="hbv" value={form.hbv} onChange={handleChange} className="form-control">
+            <select name="hbv" value={form.hbv} onChange={handleChange} className={`form-control ${form.hbv ? "input-filled" : ""}`}>
               <option value="">Seçiniz</option>
               <option value="Evet">Evet</option>
               <option value="Hayır">Hayır</option>
@@ -206,7 +218,7 @@ const InputPage = () => {
           </div>
           <div className="form-group">
             <label>Ailede Kanser Öyküsü</label>
-            <select name="cancer_history" value={form.cancer_history} onChange={handleChange} className="form-control">
+            <select name="cancer_history" value={form.cancer_history} onChange={handleChange} className={`form-control ${form.cancer_history ? "input-filled" : ""}`}>
               <option value="">Seçiniz</option>
               <option value="Var">Var</option>
               <option value="Yok">Yok</option>
@@ -218,16 +230,17 @@ const InputPage = () => {
       <div className="right-section" style={{ marginTop: "40px" }}>
         <h3>Laboratuvar Sonuçları</h3>
         <div className="lab-grid">
-          <div className="lab-item"><label>AFP</label><input type="text" name="afp" placeholder="Örn., 5.2 ng/mL" value={form.afp} onChange={handleChange} className="form-control" /></div>
-          <div className="lab-item"><label>ALT</label><input type="text" name="ALT" placeholder="Örn., 25 U/L" value={form.ALT} onChange={handleChange} className="form-control" /></div>
-          <div className="lab-item"><label>AST</label><input type="text" name="AST" placeholder="Örn., 30 U/L" value={form.AST} onChange={handleChange} className="form-control" /></div>
-          <div className="lab-item"><label>ALP</label><input type="text" name="ALP" placeholder="Örn., 120 U/L" value={form.ALP} onChange={handleChange} className="form-control" /></div>
-          <div className="lab-item"><label>GGT</label><input type="text" name="GGT" placeholder="Örn., 40 U/L" value={form.GGT} onChange={handleChange} className="form-control" /></div>
-          <div className="lab-item"><label>BIL</label><input type="text" name="BIL" placeholder="Örn., 0.8 mg/dL" value={form.BIL} onChange={handleChange} className="form-control" /></div>
-          <div className="lab-item"><label>Albumin</label><input type="text" name="Albumin" placeholder="Örn., 4.2 g/dL" value={form.Albumin} onChange={handleChange} className="form-control" /></div>
-          <div className="lab-item"><label>Albumin/Globulin Oranı</label><input type="text" name="Albumin_and_Globulin_Ratio" placeholder="Örn., 1.2" value={form.Albumin_and_Globulin_Ratio} onChange={handleChange} className="form-control" /></div>
+          <div className="lab-item"><label>AFP</label><input type="text" name="afp" placeholder="Örn., 5.2 ng/mL" value={form.afp} onChange={handleChange} className={`form-control ${form.afp ? "input-filled" : ""}`} /></div>
+          <div className="lab-item"><label>ALT</label><input type="text" name="ALT" placeholder="Örn., 25 U/L" value={form.ALT} onChange={handleChange} className={`form-control ${form.ALT ? "input-filled" : ""}`} /></div>
+          <div className="lab-item"><label>AST</label><input type="text" name="AST" placeholder="Örn., 30 U/L" value={form.AST} onChange={handleChange} className={`form-control ${form.AST ? "input-filled" : ""}`} /></div>
+          <div className="lab-item"><label>ALP</label><input type="text" name="ALP" placeholder="Örn., 120 U/L" value={form.ALP} onChange={handleChange} className={`form-control ${form.ALP ? "input-filled" : ""}`} /></div>
+          <div className="lab-item"><label>GGT</label><input type="text" name="GGT" placeholder="Örn., 40 U/L" value={form.GGT} onChange={handleChange} className={`form-control ${form.GGT ? "input-filled" : ""}`} /></div>
+          <div className="lab-item"><label>BIL</label><input type="text" name="BIL" placeholder="Örn., 0.8 mg/dL" value={form.BIL} onChange={handleChange} className={`form-control ${form.BIL ? "input-filled" : ""}`} /></div>
+          <div className="lab-item"><label>Albumin</label><input type="text" name="Albumin" placeholder="Örn., 4.2 g/dL" value={form.Albumin} onChange={handleChange} className={`form-control ${form.Albumin ? "input-filled" : ""}`} /></div>
+
         </div>
       </div>
+
 
       <div className="image-section-wrapper" style={{ marginTop: "40px" }}>
         <div className="bt-section">

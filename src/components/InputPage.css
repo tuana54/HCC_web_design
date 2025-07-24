@@ -212,6 +212,12 @@ input[type="file"] {
   -webkit-appearance: none;
   -moz-appearance: none;
 }
+.form-control:focus {
+  border-color: #3b82f6;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
 
 select.form-control {
   background-image: url("data:image/svg+xml;utf8,<svg fill='gray' height='12' viewBox='0 0 24 24' width='12' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
@@ -328,6 +334,7 @@ select.form-control {
 }
 
 .doktor-textarea {
+
   width: 100%;
   min-height: 130px;
   font-size: 16px;
@@ -338,7 +345,10 @@ select.form-control {
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
   background-color: #f9fafb;
   box-sizing: border-box;
+
+  margin-top: 16px; /* bu satır eklenmiş olmalı */
 }
+
 
 /* Tüm sayfadaki <h3> başlıklar için genel stil */
 h3 {
@@ -348,41 +358,35 @@ h3 {
   color: #1e3a8a; /* Lacivert */
   margin-bottom: 16px;
 }
-.nav-buttons-fixed {
-  position: fixed;           /* Sayfanın kendisine göre */
-  top: 20px;                 /* Yukarıdan 20px */
-  left: 20px;                /* Soldan 20px */
+.nav-buttons-inside {
+  position: absolute;
+  top: 20px;
+  left: 20px;
   display: flex;
   gap: 10px;
   z-index: 1000;
 }
 
-.nav-buttons-inside {
-  position: absolute;
-  top: 40px;
-  left: 60px;
-  display: flex;
-  gap: 10px;
-  z-index: 10;
-}
-
 .nav-btn {
-  background-color: rgba(28, 61, 120, 0.05);
+  background-color: rgba(255, 255, 255, 0.8); /* Yarı saydam açık arka plan */
   border: none;
   border-radius: 50%;
-  padding: 8px;
+  padding: 10px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: background-color 0.2s ease, transform 0.2s ease;
-  backdrop-filter: blur(3px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .nav-btn:hover {
-  background-color: rgba(28, 61, 120, 0.2);
+  background-color: rgba(30, 64, 175, 0.1); /* hover efekti */
   transform: scale(1.05);
 }
 
 .nav-icon {
-  color: #1c3d78;
+  color: #1e3a8a; /* Lacivert ikon */
   font-size: 18px;
 }
+

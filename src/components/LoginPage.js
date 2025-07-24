@@ -28,10 +28,12 @@ const LoginPage = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.detail || 'Giriş sırasında bir hata oluştu.');
+throw new Error(data.detail || 'Giriş sırasında bir hata oluştu.');
       }
 
       console.log('Giriş başarılı:', data);
+
+      localStorage.removeItem("hastaFormData"); //kullanıcı giriş yaptığında form temizlenir.
 
       // YENİ: user_id'yi tarayıcı hafızasına kaydet
       // Bu sayede diğer sayfalarda da bu bilgiye erişebiliriz.
@@ -58,7 +60,8 @@ const LoginPage = () => {
           <p className="welcome-text">Hoş geldiniz! Lütfen giriş yapın.</p>
         </div>
 
-        <form className="login-box" onSubmit={handleLogin}>
+        <form className="login-box" 
+        onSubmit={handleLogin}>
           {error && <p className="error-message">{error}</p>}
           
           <input 
@@ -92,4 +95,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default LoginPage;
