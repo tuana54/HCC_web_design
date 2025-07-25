@@ -15,6 +15,15 @@ const TahminSonuc = () => {
   localStorage.removeItem("hastaFormData");  // eski formu sil
   navigate("/input");  // doğrudan input sayfasına git
 };
+const formatVlmText = (text) => {
+  return text
+    // Tüm "* Başlık:" veya "Başlık:" desenlerini ayıkla
+    .replace(/Ön-\s*\n\s*/g, "Ön- ")
+    .replace(/\n\s*\n/g, "\n")
+    .replace(/(?:\*\s*)?([A-ZÇĞİÖŞÜa-zçğıöşü\s\(\)]+?):/g, "<br><strong class='vlm-baslik'>$1:</strong>")
+    .replace(/\*/g, "")  // metinde kalan yıldızları da temizle
+    .replace(/\n/g, " ");  // newline'ları sil
+};
 
 
   useEffect(() => {

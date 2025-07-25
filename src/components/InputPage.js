@@ -19,13 +19,14 @@ const InputPage = () => {
       hcv: "",
       hbv: "",
       cancer_history: "",
-      afp: "",
+      AFP: "",
       ALT: "",
       AST: "",
       ALP: "",
       BIL: "",
       GGT: "",
       Albumin: "",
+      PST: "",  // Performans Skoru
       doctor_note: ""
     };
   };
@@ -114,7 +115,7 @@ const InputPage = () => {
     payload.append("cancer_history_status", form.cancer_history || "");
     if (ultrasonFile) payload.append("usg_file", ultrasonFile);
     if (btFile) payload.append("mri_file", btFile);
-
+    payload.append("pst", form.PST);  // <-- eklendi
     try {
       const response = await fetch("http://localhost:8000/evaluate_hcc_risk", {
         method: "POST",
@@ -149,6 +150,18 @@ const InputPage = () => {
       alert("Hesaplama sırasında hata oluştu: " + error.message);
     }
   };
+  
+        const placeholderMap = {
+  AFP: "Örn., 12 ng/mL (0-10)",
+  ALT: "Örn., 35 U/L (7–40)",
+  AST: "Örn., 30 U/L (5–40)",
+  ALP: "Örn., 100 U/L (45–120)",
+  GGT: "Örn., 50 U/L (9–48)",
+  BIL: "Örn., 1.0 mg/dL (0.1–1.2)",          // Total Bilirubin
+  Albumin: "Örn., 4.2 g/dL (3.5–5.0)",
+};
+
+
 
   return (
   <div className="input-page">
@@ -232,16 +245,41 @@ const InputPage = () => {
         </div>
       </div>
 
-      {/* Laboratuvar verileri */}
+            {/* Laboratuvar verileri */}
       <div className="right-section">
         <h3>Laboratuvar Sonuçları</h3>
         <div className="lab-grid">
-          {["afp", "ALT", "AST", "ALP", "GGT", "BIL", "Albumin"].map((key, i) => (
-            <div className="lab-item" key={i}>
-              <label>{key}</label>
-              <input type="text" name={key} value={form[key]} onChange={handleChange} className={`form-control ${form[key] ? "input-filled" : ""}`} />
-            </div>
+ 
+{["AFP", "ALT", "AST", "ALP", "GGT", "BIL", "Albumin"].map((key, i) => (
+  <div className="lab-item" key={i}>
+    <label>{key}</label>
+    <input
+      type="text"
+      name={key}
+      value={form[key]}
+      placeholder={placeholderMap[key]}
+      onChange={handleChange}
+      className={`form-control ${form[key] ? "input-filled" : ""}`}
+    />
+  </div>
           ))}
+          <div className="lab-item">
+  <label htmlFor="PST">PST (Performans Skoru)</label>
+  <select
+    id="PST"
+    name="PST"
+    value={form.PST}
+    onChange={handleChange}
+    className={`form-control ${form.PST ? "input-filled" : ""}`}
+  >
+    <option value="">Seçiniz</option>
+    <option value="0">0 - Normal (aktif)</option>
+    <option value="1">1 - Hafif aktivite kısıtlılığı</option>
+    <option value="2">2 - Çalışamaz ama kendi bakımını yapabilir</option>
+    <option value="3">3 - Günlük aktivite yapamaz</option>
+    <option value="4">4 - Yatalak, tam bağımlı</option>
+  </select>
+</div>
         </div>
       </div>
 
