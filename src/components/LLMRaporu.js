@@ -1,3 +1,4 @@
+// src/components/LLMRaporu.js
 import { useEffect, useState } from 'react';
 import './LLMRaporu.css'; // Kendi CSS dosyasını kullanacak
 import hccSentinelLogo from '../assets/HCCentinel.png'; // Logonuzu import ettik
@@ -103,8 +104,53 @@ const LLMRaporu = () => {
   const overallRiskLevel = apiResult?.overall_risk_level || 'Belirlenemedi';
   const isHighRisk = overallRiskLevel.toLowerCase().includes('yüksek');
   
-  // DEĞİŞİKLİK: Bütünsel LLM raporunu buradan alıyoruz.
   const geminiReport = apiResult?.gemini_comprehensive_report;
+  const doctorNote = patientDetails?.doctor_note;
+
+  // **DEĞİŞİKLİK BURADA BAŞLIYOR**
+  // LLM rapor metnini işleme mantığı
+  const renderGeminiReport = () => {
+    if (!geminiReport) {
+      return <p>Yapay zeka değerlendirmesi bulunamadı.</p>;
+    }
+
+    const lines = geminiReport.split("\n");
+    const elements = [];
+    let i = 0;
+
+    while (i < lines.length) {
+      let line = lines[i].trim();
+
+      // Durum 1: Çift yıldız (**) ile başlayanlar ana başlık olarak işlenir
+      if (line.startsWith("**") && line.endsWith("**")) {
+        elements.push(<h4 key={i}>{line.replaceAll("**", "")}</h4>);
+        i++;
+      } 
+      // Durum 2: Tek yıldız (*) ile başlayanlar alt başlık olarak işlenir
+      else if (line.startsWith("* ")) {
+        const titleText = line.substring(2).trim(); // "* " kısmını kaldırır
+        elements.push(<p key={i} className="llm-list-item-heading">{titleText}</p>); // h4 ile kalın ve başlık gibi göster
+
+        // Bir sonraki satırın açıklama olup olmadığını kontrol et
+        if (i + 1 < lines.length) {
+          let nextLine = lines[i + 1].trim();
+          // Eğer bir sonraki satır başka bir başlık türü değilse, açıklama olarak işlem
+          if (!nextLine.startsWith("**") && !nextLine.startsWith("* ")) {
+            elements.push(<p key={`desc-${i}`}>{nextLine || <br />}</p>);
+            i++; // Açıklama satırını tüket
+          }
+        }
+        i++; // Alt başlık satırını tüket
+      }
+      // Durum 3: Diğer tüm satırlar (normal paragraflar veya boş satırlar)
+      else {
+        elements.push(<p key={i}>{line || <br />}</p>);
+        i++;
+      }
+    }
+    return elements;
+  };
+  // **DEĞİŞİKLİK BURADA BİTİYOR**
 
   return (
     <div className="llm-rapor-container" id="rapor-icerigi">
@@ -118,7 +164,6 @@ const LLMRaporu = () => {
         <div className="rapor-tarih">{reportDate}</div>
       </div>
       <div className="rapor-body">
-        {/* Hasta bilgilerinin gösterildiği alan */}
         <div className="hasta-bilgileri">
           <div className="info-row-first">
             <div className="info-item">
@@ -142,29 +187,17 @@ const LLMRaporu = () => {
           </div>
         </div>
 
-        {/* DEĞİŞİKLİK: LLM'den gelen bütünsel raporun listelendiği alan */}
         <div className="llm-sonuclari">
-            {geminiReport ? (
-                // Gelen rapor metnini satır satır bölüp ekrana yazdırıyoruz
-                geminiReport.split("\n").map((line, index) => {
-                    // Kalın başlıkları (**) ayırmak için
-                    if (line.startsWith("**") && line.endsWith("**")) {
-                        return <h4 key={index}>{line.replaceAll("**", "")}</h4>;
-                    }
-                    // Liste elemanlarını (*) ayırmak için
-                    if (line.trim().startsWith("* ")) {
-                        return <p key={index} style={{ paddingLeft: "20px" }}>{line}</p>;
-                    }
-                    // Diğer düz satırlar ve boşluklar
-                    return <p key={index}>{line || <br />}</p>;
-                })
-            ) : (
-                // Rapor yoksa gösterilecek mesaj
-                <p>Yapay zeka değerlendirmesi bulunamadı.</p>
-            )}
+            {renderGeminiReport()} {/* Yeni fonksiyonu çağırıyoruz */}
         </div>
+
+        {doctorNote && (
+          <div className="doctor-note-section">
+            <h3>Doktor Notu</h3>
+            <p>{doctorNote}</p>
+          </div>
+        )}
       </div>
-      {/* RAPORUN ALTINDAKİ DOKTOR VE UYARI METNİ */}
       <div className="rapor-doktor-footer">
         <p><strong><i>(Bu rapor {selectedDoctor} tarafından oluşturulmuştur! Kesin sonuçlar için lütfen bir uzman ile görüşün.)</i></strong></p>
       </div>
