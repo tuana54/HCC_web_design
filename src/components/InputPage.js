@@ -117,7 +117,7 @@ const InputPage = () => {
     if (btFile) payload.append("mri_file", btFile);
     payload.append("pst", form.PST);  // <-- eklendi
     try {
-      const response = await fetch("http://localhost:8000/evaluate_hcc_risk", {
+      const response = await fetch("https://hcc-web-design-api.onrender.com", { //http://localhost:8000/evaluate_hcc_risk
         method: "POST",
         body: payload,
       });
