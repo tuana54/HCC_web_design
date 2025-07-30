@@ -9,26 +9,29 @@ const InputPage = () => {
 
   const getInitialForm = () => {
     const savedForm = localStorage.getItem("hastaFormData");
-    return savedForm ? JSON.parse(savedForm) : {
-      name: "",
-      surname: "",
-      Yas: "",
-      gender: "",
-      alcohol: "",
-      smoking: "",
-      hcv: "",
-      hbv: "",
-      cancer_history: "",
-      AFP: "",
-      ALT: "",
-      AST: "",
-      ALP: "",
-      BIL: "",
-      GGT: "",
-      Albumin: "",
-      PST: "",  // Performans Skoru
-      doctor_note: ""
-    };
+    return savedForm
+      ? JSON.parse(savedForm)
+      : {
+          name: "",
+          surname: "",
+          tc: "", // TC Kimlik No alanı state'e eklendi
+          Yas: "",
+          gender: "",
+          alcohol: "",
+          smoking: "",
+          hcv: "",
+          hbv: "",
+          cancer_history: "",
+          AFP: "",
+          ALT: "",
+          AST: "",
+          ALP: "",
+          BIL: "",
+          GGT: "",
+          Albumin: "",
+          PST: "", // Performans Skoru
+          doctor_note: "",
+        };
   };
 
   const [form, setForm] = useState(getInitialForm);
@@ -42,10 +45,10 @@ const InputPage = () => {
   }, [form]);
 
   useEffect(() => {
-    const userId = localStorage.getItem('user_id');
+    const userId = localStorage.getItem("user_id");
     if (!userId) {
       alert("Bu sayfayı görüntülemek için lütfen giriş yapın.");
-      navigate('/');
+      navigate("/");
     }
   }, [navigate]);
 
@@ -58,7 +61,10 @@ const InputPage = () => {
     const file = e.target.files[0];
     if (file) {
       const fileName = file.name.toLowerCase();
-      const is3DFile = fileName.endsWith(".nii") || fileName.endsWith(".nii.gz") || fileName.endsWith(".dcm");
+      const is3DFile =
+        fileName.endsWith(".nii") ||
+        fileName.endsWith(".nii.gz") ||
+        fileName.endsWith(".dcm");
       const previewUrl = is3DFile ? file.name : URL.createObjectURL(file);
       if (type === "bt") {
         setBtFile(file);
@@ -79,15 +85,16 @@ const InputPage = () => {
   };
 
   const handleCalculate = async () => {
-    const userId = localStorage.getItem('user_id');
+    const userId = localStorage.getItem("user_id");
     if (!userId) {
       alert("Lütfen tekrar giriş yapın.");
-      navigate('/');
+      navigate("/");
       return;
     }
 
-    if (!form.name || !form.surname || !form.Yas || !form.gender) {
-      alert("Lütfen hasta bilgilerini eksiksiz doldurun.");
+    // Gerekli alanlar için validasyon (TC dahil)
+    if (!form.name || !form.surname || !form.tc || !form.Yas || !form.gender) {
+      alert("Lütfen hasta bilgilerini (Ad, Soyad, TC, Yaş, Cinsiyet) eksiksiz doldurun.");
       return;
     }
 
@@ -106,8 +113,9 @@ const InputPage = () => {
     payload.append("user_id", userId);
     payload.append("patient_name", form.name);
     payload.append("patient_surname", form.surname);
+    payload.append("patient_tc", form.tc); // Payload'a TC Kimlik No eklendi
     payload.append("lab_data", JSON.stringify(labData));
-    payload.append("afp_value", parseFloat(form.afp || 0));
+    payload.append("afp_value", parseFloat(form.AFP || 0));
     payload.append("alcohol_consumption", form.alcohol || "");
     payload.append("smoking_status", form.smoking || "");
     payload.append("hcv_status", form.hcv || "");
@@ -115,7 +123,7 @@ const InputPage = () => {
     payload.append("cancer_history_status", form.cancer_history || "");
     if (ultrasonFile) payload.append("usg_file", ultrasonFile);
     if (btFile) payload.append("mri_file", btFile);
-    payload.append("pst", form.PST);  // <-- eklendi
+    payload.append("pst", form.PST);
     try {
       const response = await fetch("http://localhost:8000/evaluate_hcc_risk", {
         method: "POST",
@@ -150,48 +158,45 @@ const InputPage = () => {
       alert("Hesaplama sırasında hata oluştu: " + error.message);
     }
   };
-  
-        const placeholderMap = {
-  AFP: "Örn., 12 ng/mL (0-10)",
-  ALT: "Örn., 35 U/L (7–40)",
-  AST: "Örn., 30 U/L (5–40)",
-  ALP: "Örn., 100 U/L (45–120)",
-  GGT: "Örn., 50 U/L (9–48)",
-  BIL: "Örn., 1.0 mg/dL (0.1–1.2)",          // Total Bilirubin
-  Albumin: "Örn., 4.2 g/dL (3.5–5.0)",
-};
 
-
+  const placeholderMap = {
+    AFP: "Örn., 12 ng/mL (0-10)",
+    ALT: "Örn., 35 U/L (7–40)",
+    AST: "Örn., 30 U/L (5–40)",
+    ALP: "Örn., 100 U/L (45–120)",
+    GGT: "Örn., 50 U/L (9–48)",
+    BIL: "Örn., 1.0 mg/dL (0.1–1.2)", // Total Bilirubin
+    Albumin: "Örn., 4.2 g/dL (3.5–5.0)",
+  };
 
   return (
-  <div className="input-page">
-    <div className="nav-buttons-inside">
+    <div className="input-page">
+      <div className="nav-buttons-inside">
+        {/* Geri Butonu */}
+        <button className="nav-btn" onClick={() => navigate("/")}>
+          <FaArrowLeft className="nav-icon" />
+        </button>
 
-      {/* Geri Butonu */}
-      <button className="nav-btn" onClick={() => navigate("/")}>
-        <FaArrowLeft className="nav-icon" />
-      </button>
+        {/* İleri Butonu */}
+        <button
+          className="nav-btn"
+          onClick={() => {
+            const apiResult = sessionStorage.getItem("apiResult");
+            const vlmReport = sessionStorage.getItem("vlmReport");
+            const patientDetails = sessionStorage.getItem("patientDetails");
 
-      {/* İleri Butonu */}
-      <button
-        className="nav-btn"
-        onClick={() => {
-          const apiResult = sessionStorage.getItem("apiResult");
-          const vlmReport = sessionStorage.getItem("vlmReport");
-          const patientDetails = sessionStorage.getItem("patientDetails");
-
-          if (apiResult && vlmReport && patientDetails) {
-            navigate("/sonuc");
-          } else {
-            alert("Henüz hesaplama yapılmadı. Lütfen önce 'Hesapla' butonuna basın.");
-          }
-        }}
-      >
-        <FaArrowRight className="nav-icon" />
-      </button>
-
-    </div>
-
+            if (apiResult && vlmReport && patientDetails) {
+              navigate("/sonuc");
+            } else {
+              alert(
+                "Henüz hesaplama yapılmadı. Lütfen önce 'Hesapla' butonuna basın."
+              );
+            }
+          }}
+        >
+          <FaArrowRight className="nav-icon" />
+        </button>
+      </div>
 
       <h2>Hasta Bilgileri ve Laboratuvar Verileri</h2>
 
@@ -201,6 +206,8 @@ const InputPage = () => {
           {[
             { name: "name", label: "Ad", placeholder: "Örn., Ayşe" },
             { name: "surname", label: "Soyad", placeholder: "Örn., Yılmaz" },
+            // TC Kimlik No için input alanı eklendi
+            { name: "tc", label: "TC Kimlik No", placeholder: "Örn., 12345678901" },
             { name: "Yas", label: "Yaş", placeholder: "Örn., 45" },
           ].map(({ name, label, placeholder }) => (
             <div className="form-group" key={name}>
@@ -220,12 +227,16 @@ const InputPage = () => {
 
           {["alcohol", "smoking", "hcv", "hbv"].map((key) => (
             <div className="form-group" key={key}>
-              <label>{{
-                alcohol: "Alkol Tüketimi",
-                smoking: "Sigara Kullanımı",
-                hcv: "HCV (Hepatit C)",
-                hbv: "HBV (Hepatit B)"
-              }[key]}</label>
+              <label>
+                {
+                  {
+                    alcohol: "Alkol Tüketimi",
+                    smoking: "Sigara Kullanımı",
+                    hcv: "HCV (Hepatit C)",
+                    hbv: "HBV (Hepatit B)",
+                  }[key]
+                }
+              </label>
               <select name={key} value={form[key]} onChange={handleChange} className={`form-control ${form[key] ? "input-filled" : ""}`}>
                 <option value="">Seçiniz</option>
                 <option value="Evet">Evet</option>
@@ -245,59 +256,59 @@ const InputPage = () => {
         </div>
       </div>
 
-            {/* Laboratuvar verileri */}
+      {/* Laboratuvar verileri */}
       <div className="right-section">
         <h3>Laboratuvar Sonuçları</h3>
         <div className="lab-grid">
- 
-{["AFP", "ALT", "AST", "ALP", "GGT", "BIL", "Albumin"].map((key, i) => (
-  <div className="lab-item" key={i}>
-    <label>{key}</label>
-    <input
-      type="text"
-      name={key}
-      value={form[key]}
-      placeholder={placeholderMap[key]}
-      onChange={handleChange}
-      className={`form-control ${form[key] ? "input-filled" : ""}`}
-    />
-  </div>
-          ))}
+          {["AFP", "ALT", "AST", "ALP", "GGT", "BIL", "Albumin"].map(
+            (key, i) => (
+              <div className="lab-item" key={i}>
+                <label>{key}</label>
+                <input
+                  type="text"
+                  name={key}
+                  value={form[key]}
+                  placeholder={placeholderMap[key]}
+                  onChange={handleChange}
+                  className={`form-control ${form[key] ? "input-filled" : ""}`}
+                />
+              </div>
+            )
+          )}
           <div className="lab-item">
-  <label htmlFor="PST">PST (Performans Skoru)</label>
-  <select
-    id="PST"
-    name="PST"
-    value={form.PST}
-    onChange={handleChange}
-    className={`form-control ${form.PST ? "input-filled" : ""}`}
-  >
-    <option value="">Seçiniz</option>
-    <option value="0">0 - Normal (aktif)</option>
-    <option value="1">1 - Hafif aktivite kısıtlılığı</option>
-    <option value="2">2 - Çalışamaz ama kendi bakımını yapabilir</option>
-    <option value="3">3 - Günlük aktivite yapamaz</option>
-    <option value="4">4 - Yatalak, tam bağımlı</option>
-  </select>
-</div>
+            <label htmlFor="PST">PST (Performans Skoru)</label>
+            <select id="PST" name="PST" value={form.PST} onChange={handleChange} className={`form-control ${form.PST ? "input-filled" : ""}`}>
+              <option value="">Seçiniz</option>
+              <option value="0">0 - Normal (aktif)</option>
+              <option value="1">1 - Hafif aktivite kısıtlılığı</option>
+              <option value="2">2 - Çalışamaz ama kendi bakımını yapabilir</option>
+              <option value="3">3 - Günlük aktivite yapamaz</option>
+              <option value="4">4 - Yatalak, tam bağımlı</option>
+            </select>
+          </div>
         </div>
       </div>
 
       {/* Görüntü Yükleme */}
       <div className="image-section-wrapper">
         {[
-          { label: "Ultrason", file: ultrasonFile, url: ultrasonImageUrl, type: "ultrason" },
+          { label: "Ultrason", file: ultrasonFile, url: ultrasonImageUrl, type: "ultrason", },
           { label: "MR", file: btFile, url: btImageUrl, type: "bt" },
         ].map(({ label, file, url, type }, i) => (
           <div className="bt-section" key={i}>
             <h3>{label} Görüntüsü Yükleme</h3>
             <label htmlFor={`${type}-upload`} className="upload-area">
               {url ? (
-                file.name.toLowerCase().match(/\.(nii|nii.gz|dcm)$/)
-                  ? <p>Yüklü: {url}</p>
-                  : <img src={url} alt={`${label} Önizleme`} />
+                file.name.toLowerCase().match(/\.(nii|nii.gz|dcm)$/) ? (
+                  <p>Yüklü: {url}</p>
+                ) : (
+                  <img src={url} alt={`${label} Önizleme`} />
+                )
               ) : (
-                <div><strong>{label} Görüntüsü Yükle</strong><small>Sürükleyin veya gözatın</small></div>
+                <div>
+                  <strong>{label} Görüntüsü Yükle</strong>
+                  <small>Sürükleyin veya gözatın</small>
+                </div>
               )}
             </label>
             <input type="file" id={`${type}-upload`} accept=".nii,.nii.gz,.dcm,image/*" style={{ display: "none" }} onChange={(e) => handleFileChange(e, type)} />
@@ -307,7 +318,9 @@ const InputPage = () => {
 
       {/* Doktor notu */}
       <div className="doktor-note-kart">
-        <h3><FaUserMd /> Doktorun Notu</h3>
+        <h3>
+          <FaUserMd /> Doktorun Notu
+        </h3>
         <textarea
           name="doctor_note"
           value={form.doctor_note}
@@ -319,10 +332,12 @@ const InputPage = () => {
 
       {/* Buton */}
       <div className="button-container">
-        <button className="calculate-btn" onClick={handleCalculate}>Hesapla</button>
+        <button className="calculate-btn" onClick={handleCalculate}>
+          Hesapla
+        </button>
       </div>
     </div>
   );
 };
 
-export default InputPage;
+export default InputPage; 
