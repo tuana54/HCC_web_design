@@ -1,206 +1,142 @@
 // src/components/LLMRaporu.js
-import { useEffect, useState } from 'react';
-import './LLMRaporu.css'; // Kendi CSS dosyasını kullanacak
-import hccSentinelLogo from '../assets/HCCentinel.png'; // Logonuzu import ettik
-import jsPDF from 'jspdf'; // jsPDF kütüphanesini import edin
-import html2canvas from 'html2canvas'; // html2canvas kütüphanesini import edin
 
-// Font Awesome ikonlarını import edin
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faDownload } from '@fortawesome/free-solid-svg-icons'; // İndirme (aşağı ok) ikonunu import edin
+import React, { useState, useEffect } from 'react';
+import './LLMRaporu.css';
+import hccSentinelLogo from '../assets/HCCentinel.png';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+import { FaDownload, FaSpinner } from 'react-icons/fa';
 
 const LLMRaporu = () => {
-  const [reportData, setReportData] = useState(null);
-  const [selectedDoctor, setSelectedDoctor] = useState('bir model');
-  const [reportDate, setReportDate] = useState(''); // Tarih state'i eklendi
+  const [apiResult, setApiResult] = useState(null);
+  const [patientDetails, setPatientDetails] = useState(null);
+  const [selectedDoctor, setSelectedDoctor] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
+  const [reportDate, setReportDate] = useState('');
 
   useEffect(() => {
-    // Veriyi yeni sekmede alabilmek için sessionStorage'dan okuyoruz.
-    try {
-      const data = sessionStorage.getItem('reportDataForLlm');
-      if (data) {
-        const parsedData = JSON.parse(data);
-        setReportData(parsedData);
+    const generateNewReport = async () => {
+      try {
+        const storedDataString = sessionStorage.getItem('reportDataForLlm');
+        if (!storedDataString) throw new Error("Oturumda rapor verisi bulunamadı.");
         
-        // selectedDoctor bilgisini parsedData içinden oku
-        if (parsedData.selectedDoctor) {
-          setSelectedDoctor(parsedData.selectedDoctor);
+        const storedData = JSON.parse(storedDataString);
+        setPatientDetails(storedData.patientDetails);
+        setSelectedDoctor(storedData.selectedDoctor);
+
+        const payload = new FormData();
+        const userId = localStorage.getItem("user_id");
+
+        payload.append('user_id', userId);
+        payload.append('patient_name', storedData.patientDetails.name);
+        payload.append('patient_surname', storedData.patientDetails.surname);
+        payload.append('patient_tc', storedData.patientDetails.tc);
+        const labData = {
+            Yaş: parseFloat(storedData.patientDetails.Yas), Cinsiyet: storedData.patientDetails.gender === "Erkek" ? 1 : 0,
+            Albumin: parseFloat(storedData.patientDetails.Albumin || 0), ALP: parseFloat(storedData.patientDetails.ALP || 0),
+            ALT: parseFloat(storedData.patientDetails.ALT || 0), AST: parseFloat(storedData.patientDetails.AST || 0),
+            BIL: parseFloat(storedData.patientDetails.BIL || 0), GGT: parseFloat(storedData.patientDetails.GGT || 0),
+        };
+        payload.append('lab_data', JSON.stringify(labData));
+        payload.append('doctor_name', storedData.selectedDoctor);
+        payload.append("afp_value", parseFloat(storedData.patientDetails.AFP || 0));
+
+        const response = await fetch("http://localhost:8000/evaluate_hcc_risk", { method: "POST", body: payload });
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.detail || "Sunucu hatası");
         }
+        const result = await response.json();
+        setApiResult(result);
 
-      } else {
-        setError('Rapor verisi bulunamadı. Lütfen önceki sayfadan tekrar deneyin.');
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
       }
-    } catch (err) {
-      setError('Rapor verisi okunurken bir hata oluştu.');
-      console.error(err);
-    }
+    };
 
-    // Raporun oluşturulduğu tarihi GG.AA.YYYY formatında ayarla
+    generateNewReport();
+    
     const today = new Date();
-    const day = String(today.getDate()).padStart(2, '0');
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const year = today.getFullYear();
-    const formattedDate = `${day}.${month}.${year}`;
-    setReportDate(formattedDate);
-  }, []); // Bağımlılık dizisi boş kalmalı, sadece bir kere yüklenmeli
-
+    setReportDate(`${String(today.getDate()).padStart(2, '0')}.${String(today.getMonth() + 1).padStart(2, '0')}.${today.getFullYear()}`);
+  }, []);
+  
   const handleDownloadPdf = () => {
     const input = document.getElementById('rapor-icerigi');
-    if (!input) {
-      console.error('PDF oluşturulacak div bulunamadı: #rapor-icerigi');
-      alert('Rapor içeriği bulunamadığı için PDF oluşturulamadı.');
-      return;
-    }
-
     const downloadButton = document.querySelector('.download-pdf-button');
     if (downloadButton) downloadButton.style.display = 'none';
-
-    html2canvas(input, {
-      scale: 2,
-      useCORS: true
-    }).then((canvas) => {
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const imgWidth = 210;
-      const pageHeight = 297;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      let heightLeft = imgHeight;
-      let position = 0;
-
-      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
-
-      while (heightLeft >= 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
+    html2canvas(input, { scale: 2, useCORS: true }).then((canvas) => {
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const imgWidth = 210, pageHeight = 297;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        let heightLeft = imgHeight, position = 0;
         pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
         heightLeft -= pageHeight;
-      }
-      
-      const patientName = reportData?.patientDetails?.name || 'Hasta';
-      const patientSurname = reportData?.patientDetails?.surname || 'Raporu';
-      const fileName = `${patientName}_${patientSurname}_HCC_Tahmin_Raporu.pdf`;
-
-      pdf.save(fileName);
-
-      if (downloadButton) downloadButton.style.display = 'block';
-    }).catch(error => {
-      console.error("PDF oluşturulurken hata oluştu:", error);
-      alert("PDF oluşturulurken bir hata oluştu. Lütfen tekrar deneyin.");
-      if (downloadButton) downloadButton.style.display = 'block';
+        while (heightLeft >= 0) {
+            position = heightLeft - imgHeight;
+            pdf.addPage();
+            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+        }
+        const fileName = `${patientDetails?.name}_${patientDetails?.surname}_HCC_Raporu.pdf`;
+        pdf.save(fileName);
+        if (downloadButton) downloadButton.style.display = 'block';
     });
   };
 
-  if (error) {
-    return <div className="llm-rapor-container error">{error}</div>;
-  }
-
-  if (!reportData) {
-    return <div className="llm-rapor-container">Rapor verisi yükleniyor...</div>;
-  }
-
-  const { patientDetails, apiResult } = reportData;
-  const overallRiskLevel = apiResult?.overall_risk_level || 'Belirlenemedi';
-  const isHighRisk = overallRiskLevel.toLowerCase().includes('yüksek');
-  
-  const geminiReport = apiResult?.gemini_comprehensive_report;
-  const doctorNote = patientDetails?.doctor_note;
-
-  // **DEĞİŞİKLİK BURADA BAŞLIYOR**
-  // LLM rapor metnini işleme mantığı
-  const renderGeminiReport = () => {
-    if (!geminiReport) {
-      return <p>Yapay zeka değerlendirmesi bulunamadı.</p>;
-    }
-
-    const lines = geminiReport.split("\n");
-    const elements = [];
-    let i = 0;
-
-    while (i < lines.length) {
-      let line = lines[i].trim();
-
-      // Durum 1: Çift yıldız (**) ile başlayanlar ana başlık olarak işlenir
-      if (line.startsWith("**") && line.endsWith("**")) {
-        elements.push(<h4 key={i}>{line.replaceAll("**", "")}</h4>);
-        i++;
-      } 
-      // Durum 2: Tek yıldız (*) ile başlayanlar alt başlık olarak işlenir
-      else if (line.startsWith("* ")) {
-        const titleText = line.substring(2).trim(); // "* " kısmını kaldırır
-        elements.push(<p key={i} className="llm-list-item-heading">{titleText}</p>); // h4 ile kalın ve başlık gibi göster
-
-        // Bir sonraki satırın açıklama olup olmadığını kontrol et
-        if (i + 1 < lines.length) {
-          let nextLine = lines[i + 1].trim();
-          // Eğer bir sonraki satır başka bir başlık türü değilse, açıklama olarak işlem
-          if (!nextLine.startsWith("**") && !nextLine.startsWith("* ")) {
-            elements.push(<p key={`desc-${i}`}>{nextLine || <br />}</p>);
-            i++; // Açıklama satırını tüket
-          }
-        }
-        i++; // Alt başlık satırını tüket
-      }
-      // Durum 3: Diğer tüm satırlar (normal paragraflar veya boş satırlar)
-      else {
-        elements.push(<p key={i}>{line || <br />}</p>);
-        i++;
-      }
-    }
-    return elements;
+  const renderComprehensiveReport = () => {
+    const reportText = apiResult?.comprehensive_report;
+    if (!reportText) return <p>Yapay zeka değerlendirmesi bulunamadı.</p>;
+    if (apiResult.error) return <p className="rapor-hata-mesaji">{reportText}</p>;
+    return reportText.split('\n').map((line, index) => {
+      line = line.trim();
+      if (line.startsWith('**') && line.endsWith('**')) return <h4 key={index}>{line.replaceAll('**', '')}</h4>;
+      if (line.startsWith('* ')) return <p key={index}><strong>{line.substring(2)}</strong></p>;
+      return <p key={index}>{line || <br />}</p>;
+    });
   };
-  // **DEĞİŞİKLİK BURADA BİTİYOR**
+
+  if (isLoading) {
+    return <div className="llm-rapor-container loading"><FaSpinner className="spinner" /><p>Rapor, {selectedDoctor} modeli ile oluşturuluyor...</p></div>;
+  }
+  if (error) {
+    return <div className="llm-rapor-container error"><p>Hata: {error}</p></div>;
+  }
+  if (!apiResult || !patientDetails) {
+    return <div className="llm-rapor-container">Rapor verisi yüklenemedi.</div>;
+  }
+
+  const overallRisk = apiResult?.overall_risk_level || "Belirlenemedi";
+  const isHighRisk = overallRisk.toLowerCase().includes('yüksek');
 
   return (
     <div className="llm-rapor-container" id="rapor-icerigi">
-      <button className="download-pdf-button" onClick={handleDownloadPdf} title="Belgeyi İndir">
-        <FontAwesomeIcon icon={faDownload} />
-      </button>
-
-      <div className="rapor-header">
-        <img src={hccSentinelLogo} alt="HCCentinel Logo" className="rapor-logo" />
-        <h1>YAPAY ZEKA DESTEKLİ HCC TAHMİN RAPORU</h1>
-        <div className="rapor-tarih">{reportDate}</div>
-      </div>
-      <div className="rapor-body">
-        <div className="hasta-bilgileri">
-          <div className="info-row-first">
-            <div className="info-item">
-              <strong>Hasta Adı Soyadı:</strong>
-              <span>{patientDetails?.name || '-'} {patientDetails?.surname || ''}</span>
-            </div>
-            <div className="info-item">
-              <strong>Risk:</strong>
-              <span className={isHighRisk ? 'risk-kalin' : ''}>
-                {overallRiskLevel}
-              </span>
-            </div>
-          </div>
-          <div className="info-item">
-            <strong>Yaş:</strong>
-            <span>{patientDetails?.age || '-'}</span>
-          </div>
-          <div className="info-item">
-            <strong>Cinsiyet:</strong>
-            <span>{patientDetails?.gender || '-'}</span>
-          </div>
+        <button className="download-pdf-button" onClick={handleDownloadPdf} title="Raporu PDF Olarak İndir">
+            <FaDownload />
+        </button>
+        <div className="rapor-header">
+            <img src={hccSentinelLogo} alt="Logo" className="rapor-logo" />
+            <h1>YAPAY ZEKA DESTEKLİ HCC TAHMİN RAPORU</h1>
+            <div className="rapor-tarih">{reportDate}</div>
         </div>
-
-        <div className="llm-sonuclari">
-            {renderGeminiReport()} {/* Yeni fonksiyonu çağırıyoruz */}
+        <div className="rapor-body">
+            <div className="hasta-bilgileri">
+                <div className="info-item"><strong>Hasta:</strong> <span>{patientDetails?.name} {patientDetails?.surname}</span></div>
+                <div className="info-item"><strong>Yaş:</strong> <span>{patientDetails?.age}</span></div>
+                <div className="info-item"><strong>Cinsiyet:</strong> <span>{patientDetails?.gender}</span></div>
+                <div className="info-item"><strong>Genel Risk:</strong> <span className={isHighRisk ? 'risk-kalin' : ''}>{overallRisk}</span></div>
+            </div>
+            <div className="llm-sonuclari">
+                {renderComprehensiveReport()}
+            </div>
         </div>
-
-        {doctorNote && (
-          <div className="doctor-note-section">
-            <h3>Doktor Notu</h3>
-            <p>{doctorNote}</p>
-          </div>
-        )}
-      </div>
-      <div className="rapor-doktor-footer">
-        <p><strong><i>(Bu rapor {selectedDoctor} tarafından oluşturulmuştur! Kesin sonuçlar için lütfen bir uzman ile görüşün.)</i></strong></p>
-      </div>
+        <div className="rapor-doktor-footer">
+            <p><strong>Raporu Yorumlayan Model:</strong> {apiResult.comprehensive_model_used || "Bilinmiyor"}</p>
+            <p><i>(Bu rapor yapay zeka tarafından oluşturulmuştur. Kesin sonuçlar için lütfen bir uzman ile görüşün.)</i></p>
+        </div>
     </div>
   );
 };
