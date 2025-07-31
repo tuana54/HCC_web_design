@@ -1,13 +1,13 @@
 // src/components/LLMRaporu.js
-import { useEffect, useState } from 'react';
-import './LLMRaporu.css'; // Kendi CSS dosyasını kullanacak
-import hccSentinelLogo from '../assets/HCCentinel.png'; // Logonuzu import ettik
-import jsPDF from 'jspdf'; // jsPDF kütüphanesini import edin
 import html2canvas from 'html2canvas'; // html2canvas kütüphanesini import edin
+import jsPDF from 'jspdf'; // jsPDF kütüphanesini import edin
+import { useEffect, useState } from 'react';
+import hccSentinelLogo from '../assets/HCCentinel.png'; // Logonuzu import ettik
+import './LLMRaporu.css'; // Kendi CSS dosyasını kullanacak
 
 // Font Awesome ikonlarını import edin
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDownload } from '@fortawesome/free-solid-svg-icons'; // İndirme (aşağı ok) ikonunu import edin
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const LLMRaporu = () => {
   const [reportData, setReportData] = useState(null);
