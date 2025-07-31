@@ -1,8 +1,39 @@
-import React, { useState, useEffect } from "react";
-import "./TahminSonuc.css";
+import { useEffect, useRef, useState } from "react";
+import { FaArrowLeft, FaArrowRight, FaImage, FaPaperPlane, FaRobot, FaUserMd, FaUserPlus } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
-import { FaUserMd, FaRobot, FaImage, FaPaperPlane, FaArrowLeft, FaArrowRight, FaUserPlus } from "react-icons/fa";
 import LLMModelComparison from "./LLMModelComparison";
+import "./TahminSonuc.css";
+
+// YENİ: Gerekli ikonları import ediyoruz
+import { faLightbulb } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+// --- YENİ BÖLÜM: Rehber Kutucuğu Component'i ---
+const TourBox = ({ title, content, isVisible, onNext, onPrev, onClose, isFirst, isLast }) => {
+  if (!isVisible) return null;
+  return (
+    <div className="tour-box">
+      <div className="tour-box-title">{title}</div>
+      <div className="tour-box-content">{content}</div>
+      <div className="tour-navigation">
+        {isFirst ? <button onClick={onClose} className="tour-button secondary">Kapat</button> : <button onClick={onPrev} className="tour-button secondary">Geri</button>}
+        {isLast ? <button onClick={onClose} className="tour-button">Bitir</button> : <button onClick={onNext} className="tour-button">İleri</button>}
+      </div>
+    </div>
+  );
+};
+// --- YENİ BÖLÜM SONU ---
+
+// --- YENİ BÖLÜM: Bu sayfanın rehber adımları ---
+const tahminSonucTourSteps = [
+    { title: "1. Hasta Bilgisi", content: "Bu kart, değerlendirmesi yapılan hastanın temel demografik bilgilerini özetler." },
+    { title: "2. Genel Risk Seviyesi", content: "Hastanın laboratuvar verilerine dayanarak hesaplanan genel HCC risk seviyesini gösterir." },
+    { title: "3. Yapay Zekâ Değerlendirmesi", content: "Farklı yapay zekâ modellerinin hasta verilerine dayanarak yaptığı detaylı analiz ve risk tahminlerini içerir." },
+    { title: "4. Görüntü Analizi (VLM)", content: "Yüklenen ultrason veya MR görüntüsünün, görsel dil modeli (VLM) tarafından analiz edilerek oluşturulan radyoloji raporunu gösterir." },
+    { title: "5. Doktor Geri Bildirimi", content: "AI tarafından oluşturulan sonuçları değerlendirip kendi yorumlarınızı ekleyebileceğiniz alandır." }
+];
+// --- YENİ BÖLÜM SONU ---
+
 
 const TahminSonuc = () => {
   const location = useLocation();
@@ -11,20 +42,40 @@ const TahminSonuc = () => {
 
   const { hastaAdiSoyadi, apiResult, patientDetails, vlmReport } = location.state || {};
 
-  const handleYeniHasta = () => {
-  localStorage.removeItem("hastaFormData");  // eski formu sil
-  navigate("/input");  // doğrudan input sayfasına git
-};
-const formatVlmText = (text) => {
-  return text
-    // Tüm "* Başlık:" veya "Başlık:" desenlerini ayıkla
-    .replace(/Ön-\s*\n\s*/g, "Ön- ")
-    .replace(/\n\s*\n/g, "\n")
-    .replace(/(?:\*\s*)?([A-ZÇĞİÖŞÜa-zçğıöşü\s\(\)]+?):/g, "<br><strong class='vlm-baslik'>$1:</strong>")
-    .replace(/\*/g, "")  // metinde kalan yıldızları da temizle
-    .replace(/\n/g, " ");  // newline'ları sil
-};
+  // --- YENİ BÖLÜM: Rehber mantığı ---
+  const [tourStep, setTourStep] = useState(0);
+  const totalSteps = tahminSonucTourSteps.length;
+  const tourIconRef = useRef(null);
+  const pageRef = useRef(null);
 
+  const startTour = () => setTourStep(1);
+  const endTour = () => setTourStep(0);
+  const nextStep = () => setTourStep(current => (current < totalSteps ? current + 1 : 0));
+  const prevStep = () => setTourStep(current => (current > 1 ? current - 1 : 0));
+
+  useEffect(() => {
+    if (tourStep === 0) return;
+    function handleClickOutside(event) {
+      if (
+        pageRef.current && !pageRef.current.contains(event.target) && 
+        tourIconRef.current && !tourIconRef.current.contains(event.target) &&
+        !event.target.closest('.tour-box')
+      ) {
+        endTour();
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [tourStep]);
+  // --- YENİ BÖLÜM SONU ---
+
+
+  const handleYeniHasta = () => {
+    localStorage.removeItem("hastaFormData");
+    navigate("/input");
+  };
 
   useEffect(() => {
     console.log("VLM Report (ilk 100 karakter):", vlmReport?.substring(0, 100) || "Yok");
@@ -43,12 +94,7 @@ const formatVlmText = (text) => {
   }
 
   const overallRisk = apiResult?.overall_risk_level || "Belirlenemedi";
-  const detailedSummary = apiResult?.detailed_report_summary || ["Yapay zeka değerlendirmesi bekleniyor."];
-
-  const llmYanitElements = detailedSummary.map((item, index) => (
-    <p key={index} className="llm-yanit">{item}</p>
-  ));
-
+  
   let riskBoxClass = "risk-kutusu";
   if (overallRisk.includes("Düşük Risk")) riskBoxClass += " risk-dusuk";
   else if (overallRisk.includes("Orta Risk")) riskBoxClass += " risk-orta";
@@ -73,29 +119,41 @@ const formatVlmText = (text) => {
     : "Not: Risk hesaplaması için yeterli veri sağlanmamıştır.";
 
   return (
-    <div className="tahmin-container" id="tahmin-container">
+    <div className="tahmin-container" id="tahmin-container" ref={pageRef}>
       
-      {/* Yeni Hasta Butonu */}
+      {/* YENİ: Ampul ikonu eklendi */}
+      <button ref={tourIconRef} onClick={startTour} className="info-icon-button" title="Rehberi Başlat">
+        <FontAwesomeIcon icon={faLightbulb} size="2x" />
+      </button>
+
       <button className="yeni-hasta-buton" onClick={handleYeniHasta}>
         <FaUserPlus className="yeni-hasta-ikon" />
         <span className="yeni-hasta-tooltip">Yeni Hasta Ekle</span>
       </button>
 
-      {/* Navigasyon Butonları */}
       <div className="nav-buttons-inside">
-  <button className="nav-btn" onClick={() => navigate("/input")}>
-    <FaArrowLeft className="nav-icon" />
-  </button>
-  <button className="nav-btn" onClick={() => navigate("/")}>
-    <FaArrowRight className="nav-icon" />
-  </button>
-</div>
-
+        <button className="nav-btn" onClick={() => navigate("/input")}>
+          <FaArrowLeft className="nav-icon" />
+        </button>
+        <button className="nav-btn" onClick={() => navigate("/")}>
+          <FaArrowRight className="nav-icon" />
+        </button>
+      </div>
 
       <h2 className="baslik">AI Destekli Değerlendirme Sonucu</h2>
 
-      {/* Hasta Bilgisi */}
       <div className="kart hasta-kart">
+        {tourStep === 1 && (
+            <TourBox 
+                title={tahminSonucTourSteps[0].title}
+                content={tahminSonucTourSteps[0].content}
+                isVisible={tourStep === 1}
+                onNext={nextStep}
+                onPrev={prevStep}
+                onClose={endTour}
+                isFirst={true}
+            />
+        )}
         <h3><FaUserMd className="ikon-kucuk" /> Hasta Bilgisi</h3>
         <p><strong>Ad:</strong> {patientDetails?.name || "-"}</p>
         <p><strong>Soyad:</strong> {patientDetails?.surname || "-"}</p>
@@ -103,8 +161,17 @@ const formatVlmText = (text) => {
         <p><strong>Cinsiyet:</strong> {patientDetails?.gender || "-"}</p>
       </div>
 
-      {/* Risk Seviyesi */}
       <div className="kart risk-kart">
+        {tourStep === 2 && (
+            <TourBox 
+                title={tahminSonucTourSteps[1].title}
+                content={tahminSonucTourSteps[1].content}
+                isVisible={tourStep === 2}
+                onNext={nextStep}
+                onPrev={prevStep}
+                onClose={endTour}
+            />
+        )}
         <h3 className="kart-baslik">Genel HCC Risk Seviyesi</h3>
         <div className="risk-icerik">
           <span className={riskBoxClass}>{overallRisk.replace(/ \(.*\)/, '')}</span>
@@ -112,8 +179,17 @@ const formatVlmText = (text) => {
         </div>
       </div>
 
-      {/* LLM Model Değerlendirmesi */}
       <div className="llm-kart">
+        {tourStep === 3 && (
+            <TourBox 
+                title={tahminSonucTourSteps[2].title}
+                content={tahminSonucTourSteps[2].content}
+                isVisible={tourStep === 3}
+                onNext={nextStep}
+                onPrev={prevStep}
+                onClose={endTour}
+            />
+        )}
         <div className="llm-header">
           <h3><FaRobot /> Yapay Zekâ Değerlendirmesi</h3>
         </div>
@@ -123,8 +199,17 @@ const formatVlmText = (text) => {
         />
       </div>
 
-      {/* Görüntü + VLM Analizi */}
       <div className="kart usg-goruntu-kart">
+        {tourStep === 4 && (
+            <TourBox 
+                title={tahminSonucTourSteps[3].title}
+                content={tahminSonucTourSteps[3].content}
+                isVisible={tourStep === 4}
+                onNext={nextStep}
+                onPrev={prevStep}
+                onClose={endTour}
+            />
+        )}
         <h3><FaImage className="ikon" /> Görüntü Analizi (VLM Destekli)</h3>
         <div className="usg-icerik-grid">
           <div className="usg-goruntu-alani">
@@ -149,8 +234,18 @@ const formatVlmText = (text) => {
         </div>
       </div>
 
-      {/* Doktor Geri Bildirim */}
       <div className="kart doktor-yorum-kapsayici">
+        {tourStep === 5 && (
+            <TourBox 
+                title={tahminSonucTourSteps[4].title}
+                content={tahminSonucTourSteps[4].content}
+                isVisible={tourStep === 5}
+                onNext={nextStep}
+                onPrev={prevStep}
+                onClose={endTour}
+                isLast={true}
+            />
+        )}
         <h3><FaUserMd /> Doktor Geri Bildirimi</h3>
         <div className="doktor-yorum-wrapper">
           <textarea

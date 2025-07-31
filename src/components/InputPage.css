@@ -1,5 +1,89 @@
-/* InputPage.css */
+/* --- YENİ EKLENEN BÖLÜM: Rehber Stilleri --- */
+.info-icon-button {
+  background: none;
+  border: none;
+  padding: 0;
+  position: fixed;
+  top: 20px;
+  right: 25px;
+  z-index: 1050;
+  color: #ffc107;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
 
+.info-icon-button:hover {
+  transform: scale(1.1);
+  color: #e0a800;
+}
+
+.tour-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.tour-box {
+  position: absolute;
+  left: 102%; 
+  top: 20px; 
+  transform: translateY(0);
+  width: 280px;
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  z-index: 100;
+}
+
+.tour-box.right-col {
+    left: auto;
+    right: 102%;
+}
+
+.tour-box.for-button {
+    left: 50%;
+    top: 115%;
+    transform: translateX(-50%);
+}
+
+.tour-box-title {
+  font-weight: bold;
+  font-size: 16px;
+  color: #004cff;
+  margin: 0 0 8px 0;
+}
+
+.tour-box-content {
+  font-size: 14px;
+  color: #333;
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+
+.tour-navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tour-button {
+    background-color: #004cff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 12px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.tour-button.secondary {
+    background-color: #6c757d;
+}
+/* --- YENİ BÖLÜM SONU --- */
+
+
+/* Buradan sonrası senin orijinal kodun */
 .input-page {
   position: relative;
   max-width: 1280px;
@@ -29,6 +113,7 @@
 .left-section, .right-section {
   flex: 1;
   min-width: 300px;
+  position: relative;
 }
 
 .left-section h3,
@@ -38,7 +123,7 @@
   font-weight: bold;
   font-family: 'Segoe UI', sans-serif;
   margin-bottom: 20px;
-  color:  #1e3a8a;
+  color: #1e3a8a;
 }
 
 .form-group {
@@ -174,6 +259,7 @@ input[type="file"] {
   display: flex;
   justify-content: center;
   margin-top: 60px;
+  position: relative;
 }
 
 .calculate-btn {
@@ -243,6 +329,7 @@ select.form-control {
   display: flex;
   justify-content: space-between;
   gap: 20px;
+  position: relative;
 }
 
 .bt-section {
@@ -315,7 +402,7 @@ h3 {
 }
 
 .nav-btn {
-  background-color: #ffffff; /* Beyaz arka plan */
+  background-color: #ffffff;
   border: none;
   padding: 8px;
   cursor: pointer;
@@ -335,11 +422,9 @@ h3 {
 
 .nav-icon {
   font-size: 20px;
-  color: #003366; /* Aynı mavi tonu */
+  color: #003366;
 }
 .input-filled {
   border: 1.2px solid #375a9e;
   box-shadow: 0 0 2px rgba(30, 58, 138, 0.15);
 }
-
-
