@@ -3,12 +3,13 @@ import "./TahminSonuc.css";
 import { FaFileAlt } from "react-icons/fa";
 
 const modelSummaries = {
-  "Dr. Ayşe": "Görüntü analizine dayalı düşük risk tahmini sunar.",
-  "Dr. Can": "Laboratuvar verilerine göre değerlendirme yapan modeldir.",
-  "Dr. Elif": "Hibrit sistem: klinik + görüntüleme ile entegre analiz yapar.",
-  "Dr. Murat": "Gelişmiş derin öğrenme modeli; çok yönlü analiz sağlar.",
-  "Dr. Zeynep": "Uzun vadeli hasta takibine odaklı yapay zekâ modelidir.",
+  "Dr. Ayşe": "Görüntü analizine dayalı düşük risk tahmini sunar. (gemini-flash)",
+  "Dr. Can": "Laboratuvar verilerine göre değerlendirme yapan modeldir. (gemini-pro)",
+  "Dr. Elif": "Hibrit sistem: klinik + görüntüleme ile entegre analiz yapar. (groq-llama3-70b)",
+  "Dr. Murat": "Gelişmiş derin öğrenme modeli; çok yönlü analiz sağlar. (groq-llama3-8b)",
+  "Dr. Zeynep": "Uzun vadeli hasta takibine odaklı yapay zekâ modelidir. (deepseek)",
 };
+
 
 // onDoctorSelect prop'u artık bu bileşen için GEREKLİ DEĞİL.
 // Bu bileşen doğrudan sessionStorage'a yazıp raporu açıyor.

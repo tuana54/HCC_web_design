@@ -52,7 +52,7 @@ const inputPageTourSteps = [
 
 const InputPage = () => {
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); 
 
   const [tourStep, setTourStep] = useState(0);
   const totalSteps = inputPageTourSteps.length;
@@ -115,102 +115,104 @@ const InputPage = () => {
   };
 
   const handleFileChange = (e, type) => {
-    const file = e.target.files[0];
-    if (file) {
-      const fileName = file.name.toLowerCase();
-      const is3DFile =
-        fileName.endsWith(".nii") ||
-        fileName.endsWith(".nii.gz") ||
-        fileName.endsWith(".dcm");
-      const previewUrl = is3DFile ? file.name : URL.createObjectURL(file);
-      if (type === "bt") {
-        setBtFile(file);
-        setBtImageUrl(previewUrl);
-      } else {
-        setUltrasonFile(file);
-        setUltrasonImageUrl(previewUrl);
-      }
-    } else {
-      if (type === "bt") {
-        setBtFile(null);
-        setBtImageUrl(null);
-      } else {
-        setUltrasonFile(null);
-        setUltrasonImageUrl(null);
-      }
-    }
-  };
+    const file = e.target.files[0];
+    if (file) {
+      const fileName = file.name.toLowerCase();
+      const is3DFile =
+        fileName.endsWith(".nii") ||
+        fileName.endsWith(".nii.gz") ||
+        fileName.endsWith(".dcm");
+      const previewUrl = is3DFile ? file.name : URL.createObjectURL(file);
+      if (type === "bt") {
+        setBtFile(file);
+        setBtImageUrl(previewUrl);
+      } else {
+        setUltrasonFile(file);
+        setUltrasonImageUrl(previewUrl);
+      }
+    } else {
+      if (type === "bt") {
+        setBtFile(null);
+        setBtImageUrl(null);
+      } else {
+        setUltrasonFile(null);
+        setUltrasonImageUrl(null);
+      }
+    }
+  };
 
   const handleCalculate = async () => {
-    const userId = localStorage.getItem("user_id");
-    if (!userId) {
-      alert("Lütfen tekrar giriş yapın.");
-      navigate("/");
-      return;
-    }
+    const userId = localStorage.getItem("user_id");
+    if (!userId) {
+      alert("Lütfen tekrar giriş yapın.");
+      navigate("/");
+      return;
+    }
 
-    if (!form.name || !form.surname || !form.tc || !form.Yas || !form.gender) {
-      alert("Lütfen hasta bilgilerini (Ad, Soyad, TC, Yaş, Cinsiyet) eksiksiz doldurun.");
-      return;
-    }
+    if (!form.name || !form.surname || !form.tc || !form.Yas || !form.gender) {
+      alert("Lütfen hasta bilgilerini (Ad, Soyad, TC, Yaş, Cinsiyet) eksiksiz doldurun.");
+      return;
+    }
 
-    setIsLoading(true);
+    setIsLoading(true);
 
-    const labData = {
-      Yaş: parseFloat(form.Yas), Cinsiyet: form.gender === "Erkek" ? 1 : 0,
-      Albumin: parseFloat(form.Albumin || 0), ALP: parseFloat(form.ALP || 0),
-      ALT: parseFloat(form.ALT || 0), AST: parseFloat(form.AST || 0),
-      BIL: parseFloat(form.BIL || 0), GGT: parseFloat(form.GGT || 0),
-    };
+    const labData = {
+      Yaş: parseFloat(form.Yas), Cinsiyet: form.gender === "Erkek" ? 1 : 0,
+      Albumin: parseFloat(form.Albumin || 0), ALP: parseFloat(form.ALP || 0),
+      ALT: parseFloat(form.ALT || 0), AST: parseFloat(form.AST || 0),
+      BIL: parseFloat(form.BIL || 0), GGT: parseFloat(form.GGT || 0),
+      Albumin: parseFloat(form.Albumin || 0),
+    };
 
-    const payload = new FormData();
-    payload.append("user_id", userId);
-    payload.append("patient_name", form.name);
-    payload.append("patient_surname", form.surname);
-    payload.append("patient_tc", form.tc);
-    payload.append("lab_data", JSON.stringify(labData));
-    payload.append("afp_value", parseFloat(form.AFP || 0));
-    payload.append("alcohol_consumption", form.alcohol || "");
-    payload.append("smoking_status", form.smoking || "");
-    payload.append("hcv_status", form.hcv || "");
-    payload.append("hbv_status", form.hbv || "");
-    payload.append("cancer_history_status", form.cancer_history || "");
-    if (ultrasonFile) payload.append("usg_file", ultrasonFile);
-    if (btFile) payload.append("mri_file", btFile);
-    payload.append("pst", form.PST);
+    const payload = new FormData();
+    payload.append("user_id", userId);
+    payload.append("patient_name", form.name);
+    payload.append("patient_surname", form.surname);
+    payload.append("patient_tc", form.tc);
+    payload.append("lab_data", JSON.stringify(labData));
+    payload.append("afp_value", parseFloat(form.AFP || 0));
+    payload.append("doctor_name", "Dr. Ayşe"); // İlk istek için varsayılan doktor
+    payload.append("alcohol_consumption", form.alcohol || "");
+    payload.append("smoking_status", form.smoking || "");
+    payload.append("hcv_status", form.hcv || "");
+    payload.append("hbv_status", form.hbv || "");
+    payload.append("cancer_history_status", form.cancer_history || "");
+    if (ultrasonFile) payload.append("usg_file", ultrasonFile);
+    if (btFile) payload.append("mri_file", btFile);
+    payload.append("pst", form.PST);
 
-    try {
-      const response = await fetch("http://localhost:8000/evaluate_hcc_risk", {
-        method: "POST",
-        body: payload,
-      });
+    try {
+      const response = await fetch("http://localhost:8000/evaluate_hcc_risk", {
+        method: "POST",
+        body: payload,
+      });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || "Sunucu hatası");
-      }
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || "Sunucu hatası");
+      }
 
-      const result = await response.json();
-      const receivedVlmReport = result.vlm_radiology_report || null;
+      const result = await response.json();
+      const receivedVlmReport = result.vlm_radiology_report || null;
 
-      navigate("/sonuc", {
-        state: {
-          hastaAdiSoyadi: `${form.name} ${form.surname}`,
-          apiResult: result,
-          vlmReport: receivedVlmReport,
-          patientDetails: {
-            ...form, age: form.Yas, ultrasonFileUploaded: !!ultrasonFile,
-            btFileUploaded: !!btFile, ultrasonImageUrl, btImageUrl,
-          },
-        },
-      });
-    } catch (error) {
-      console.error("Hesaplama hatası:", error);
-      alert("Hesaplama sırasında hata oluştu: " + error.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+      navigate("/sonuc", {
+        state: {
+          hastaAdiSoyadi: `${form.name} ${form.surname}`,
+          apiResult: result,
+          vlmReport: receivedVlmReport,
+          patientDetails: {
+            ...form, age: form.Yas, ultrasonFileUploaded: !!ultrasonFile,
+            btFileUploaded: !!btFile, ultrasonImageUrl, btImageUrl,
+          },
+        },
+      });
+    } catch (error) {
+      console.error("Hesaplama hatası:", error);
+      alert("Hesaplama sırasında hata oluştu: " + error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const placeholderMap = {
     AFP: "Örn., 12 ng/mL (0-10)", ALT: "Örn., 35 U/L (7–40)",
@@ -256,14 +258,14 @@ const InputPage = () => {
       <div className="left-section">
         {tourStep === 1 && (
             <TourBox 
-                title={inputPageTourSteps[0].title}
-                content={inputPageTourSteps[0].content}
-                isVisible={tourStep === 1}
-                onNext={nextStep}
-                onPrev={prevStep}
-                onClose={endTour}
-                isFirst={true}
-                className={inputPageTourSteps[0].className}
+              title={inputPageTourSteps[0].title}
+              content={inputPageTourSteps[0].content}
+              isVisible={tourStep === 1}
+              onNext={nextStep}
+              onPrev={prevStep}
+              onClose={endTour}
+              isFirst={true}
+              className={inputPageTourSteps[0].className}
             />
         )}
         <h3>Hasta Bilgileri</h3>
@@ -275,30 +277,30 @@ const InputPage = () => {
             { name: "Yas", label: "Yaş", placeholder: "Örn., 45" },
         ].map(({ name, label, placeholder }) => (
             <div className="form-group" key={name}>
-                <label>{label}</label>
-                <input type="text" name={name} value={form[name]} placeholder={placeholder} onChange={handleChange} className={`form-control ${form[name] ? "input-filled" : ""}`} />
+              <label>{label}</label>
+              <input type="text" name={name} value={form[name]} placeholder={placeholder} onChange={handleChange} className={`form-control ${form[name] ? "input-filled" : ""}`} />
             </div>
         ))}
         <div className="form-group">
             <label>Cinsiyet</label>
             <select name="gender" value={form.gender} onChange={handleChange} className={`form-control ${form.gender ? "input-filled" : ""}`}>
-                <option value="">Seçiniz</option>
-                <option value="Kadın">Kadın</option>
-                <option value="Erkek">Erkek</option>
+              <option value="">Seçiniz</option>
+              <option value="Kadın">Kadın</option>
+              <option value="Erkek">Erkek</option>
             </select>
         </div>
         {["alcohol", "smoking", "hcv", "hbv"].map((key) => (
             <div className="form-group" key={key}>
-                <label>
-                {
-                    { alcohol: "Alkol Tüketimi", smoking: "Sigara Kullanımı", hcv: "HCV (Hepatit C)", hbv: "HBV (Hepatit B)" }[key]
-                }
-                </label>
-                <select name={key} value={form[key]} onChange={handleChange} className={`form-control ${form[key] ? "input-filled" : ""}`}>
-                    <option value="">Seçiniz</option>
-                    <option value="Evet">Evet</option>
-                    <option value="Hayır">Hayır</option>
-                </select>
+              <label>
+              {
+                  { alcohol: "Alkol Tüketimi", smoking: "Sigara Kullanımı", hcv: "HCV (Hepatit C)", hbv: "HBV (Hepatit B)" }[key]
+              }
+              </label>
+              <select name={key} value={form[key]} onChange={handleChange} className={`form-control ${form[key] ? "input-filled" : ""}`}>
+                  <option value="">Seçiniz</option>
+                  <option value="Evet">Evet</option>
+                  <option value="Hayır">Hayır</option>
+              </select>
             </div>
         ))}
         <div className="form-group">
@@ -315,23 +317,23 @@ const InputPage = () => {
       <div className="right-section">
         {tourStep === 2 && (
             <TourBox 
-                title={inputPageTourSteps[1].title}
-                content={inputPageTourSteps[1].content}
-                isVisible={tourStep === 2}
-                onNext={nextStep}
-                onPrev={prevStep}
-                onClose={endTour}
-                className={inputPageTourSteps[1].className}
+              title={inputPageTourSteps[1].title}
+              content={inputPageTourSteps[1].content}
+              isVisible={tourStep === 2}
+              onNext={nextStep}
+              onPrev={prevStep}
+              onClose={endTour}
+              className={inputPageTourSteps[1].className}
             />
         )}
         <h3>Laboratuvar Sonuçları</h3>
         <div className="lab-grid">
         {["AFP", "ALT", "AST", "ALP", "GGT", "BIL", "Albumin"].map(
             (key, i) => (
-                <div className="lab-item" key={i}>
-                <label>{key}</label>
-                <input type="text" name={key} value={form[key]} placeholder={placeholderMap[key]} onChange={handleChange} className={`form-control ${form[key] ? "input-filled" : ""}`} />
-                </div>
+              <div className="lab-item" key={i}>
+              <label>{key}</label>
+              <input type="text" name={key} value={form[key]} placeholder={placeholderMap[key]} onChange={handleChange} className={`form-control ${form[key] ? "input-filled" : ""}`} />
+              </div>
             )
         )}
         <div className="lab-item">
@@ -351,13 +353,13 @@ const InputPage = () => {
       <div className="image-section-wrapper">
         {tourStep === 3 && (
             <TourBox 
-                title={inputPageTourSteps[2].title}
-                content={inputPageTourSteps[2].content}
-                isVisible={tourStep === 3}
-                onNext={nextStep}
-                onPrev={prevStep}
-                onClose={endTour}
-                className={inputPageTourSteps[2].className}
+              title={inputPageTourSteps[2].title}
+              content={inputPageTourSteps[2].content}
+              isVisible={tourStep === 3}
+              onNext={nextStep}
+              onPrev={prevStep}
+              onClose={endTour}
+              className={inputPageTourSteps[2].className}
             />
         )}
         {[
@@ -368,16 +370,16 @@ const InputPage = () => {
             <h3>{label} Görüntüsü Yükleme</h3>
             <label htmlFor={`${type}-upload`} className="upload-area">
                 {url ? (
-                    file.name.toLowerCase().match(/\.(nii|nii.gz|dcm)$/) ? (
-                    <p>Yüklü: {url}</p>
-                    ) : (
-                    <img src={url} alt={`${label} Önizleme`} />
-                    )
+                  file.name.toLowerCase().match(/\.(nii|nii.gz|dcm)$/) ? (
+                  <p>Yüklü: {url}</p>
+                  ) : (
+                  <img src={url} alt={`${label} Önizleme`} />
+                  )
                 ) : (
-                    <div>
-                    <strong>{label} Görüntüsü Yükle</strong>
-                    <small>Sürükleyin veya gözatın</small>
-                    </div>
+                  <div>
+                  <strong>{label} Görüntüsü Yükle</strong>
+                  <small>Sürükleyin veya gözatın</small>
+                  </div>
                 )}
             </label>
             <input type="file" id={`${type}-upload`} accept=".nii,.nii.gz,.dcm,image/*" style={{ display: "none" }} onChange={(e) => handleFileChange(e, type)} />
@@ -388,13 +390,13 @@ const InputPage = () => {
       <div className="doktor-note-kart">
         {tourStep === 4 && (
             <TourBox 
-                title={inputPageTourSteps[3].title}
-                content={inputPageTourSteps[3].content}
-                isVisible={tourStep === 4}
-                onNext={nextStep}
-                onPrev={prevStep}
-                onClose={endTour}
-                className={inputPageTourSteps[3].className}
+              title={inputPageTourSteps[3].title}
+              content={inputPageTourSteps[3].content}
+              isVisible={tourStep === 4}
+              onNext={nextStep}
+              onPrev={prevStep}
+              onClose={endTour}
+              className={inputPageTourSteps[3].className}
             />
         )}
         <h3><FaUserMd /> Doktorun Notu</h3>
@@ -404,15 +406,15 @@ const InputPage = () => {
       <div className="button-container">
         {tourStep === 5 && (
             <TourBox 
-                title={inputPageTourSteps[4].title}
-                content={inputPageTourSteps[4].content}
-                isVisible={tourStep === 5}
-                onNext={nextStep}
-                onPrev={prevStep}
-                onClose={endTour}
-                isLast={true}
-                type="button"
-                className={inputPageTourSteps[4].className}
+              title={inputPageTourSteps[4].title}
+              content={inputPageTourSteps[4].content}
+              isVisible={tourStep === 5}
+              onNext={nextStep}
+              onPrev={prevStep}
+              onClose={endTour}
+              isLast={true}
+              type="button"
+              className={inputPageTourSteps[4].className}
             />
         )}
         <button className="calculate-btn" onClick={handleCalculate} disabled={isLoading}>
